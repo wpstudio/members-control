@@ -1,93 +1,57 @@
 <?php
 /**
  * Handles the general settings view.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-namespace Members\Admin;
+namespace MembersControl\Admin;
 
 /**
  * Sets up and handles the general settings view.
- *
- * @since  2.0.0
- * @access public
  */
 class View_General extends View {
 
-	/**
-	 * Holds an array the plugin settings.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @var    array
-	 */
 	public $settings = array();
 
-	/**
-	 * Enqueue scripts/styles.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function enqueue() {
 
-		wp_enqueue_script( 'members-settings' );
+		wp_enqueue_script( 'memberscontrol-settings' );
 	}
 
-	/**
-	 * Registers the plugin settings.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	function register_settings() {
 
 		// Get the current plugin settings w/o the defaults.
-		$this->settings = get_option( 'members_settings' );
+		$this->settings = get_option( 'memberscontrol_settings' );
 
 		// Register the setting.
-		register_setting( 'members_settings', 'members_settings', array( $this, 'validate_settings' ) );
+		register_setting( 'memberscontrol_settings', 'memberscontrol_settings', array( $this, 'validate_settings' ) );
 
 		/* === Settings Sections === */
 
 		// Add settings sections.
-		add_settings_section( 'roles_caps',          esc_html__( 'Roles and Capabilities', 'members' ), array( $this, 'section_roles_caps' ), 'members-settings' );
-		add_settings_section( 'content_permissions', esc_html__( 'Content Permissions',    'members' ), '__return_false',                     'members-settings' );
-		add_settings_section( 'private_site',        esc_html__( 'Private Site',           'members' ), '__return_false',                     'members-settings' );
+		add_settings_section( 'roles_caps',          esc_html__( 'Roles and Capabilities', 'memberscontrol' ), array( $this, 'section_roles_caps' ), 'memberscontrol-settings' );
+		add_settings_section( 'content_permissions', esc_html__( 'Content Permissions',    'memberscontrol' ), '__return_false',                     'memberscontrol-settings' );
+		add_settings_section( 'private_site',        esc_html__( 'Private Site',           'memberscontrol' ), '__return_false',                     'memberscontrol-settings' );
 
 		/* === Settings Fields === */
 
 		// Role manager fields.
-		add_settings_field( 'enable_role_manager',  esc_html__( 'Role Manager',        'members' ), array( $this, 'field_enable_role_manager'  ), 'members-settings', 'roles_caps' );
-		add_settings_field( 'enable_multi_roles',   esc_html__( 'Multiple User Roles', 'members' ), array( $this, 'field_enable_multi_roles'   ), 'members-settings', 'roles_caps' );
-		add_settings_field( 'explicit_denied_caps', esc_html__( 'Capabilities',        'members' ), array( $this, 'field_explicit_denied_caps' ), 'members-settings', 'roles_caps' );
+		add_settings_field( 'enable_role_manager',  esc_html__( 'Role Manager',        'memberscontrol' ), array( $this, 'field_enable_role_manager'  ), 'memberscontrol-settings', 'roles_caps' );
+		add_settings_field( 'enable_multi_roles',   esc_html__( 'Multiple User Roles', 'memberscontrol' ), array( $this, 'field_enable_multi_roles'   ), 'memberscontrol-settings', 'roles_caps' );
+		add_settings_field( 'explicit_denied_caps', esc_html__( 'Capabilities',        'memberscontrol' ), array( $this, 'field_explicit_denied_caps' ), 'memberscontrol-settings', 'roles_caps' );
 
 		// Content permissions fields.
-		add_settings_field( 'enable_content_permissions', esc_html__( 'Enable Permissions', 'members' ), array( $this, 'field_enable_content_permissions' ), 'members-settings', 'content_permissions' );
-		add_settings_field( 'content_permissions_error',  esc_html__( 'Error Message',      'members' ), array( $this, 'field_content_permissions_error'  ), 'members-settings', 'content_permissions' );
+		add_settings_field( 'enable_content_permissions', esc_html__( 'Enable Permissions', 'memberscontrol' ), array( $this, 'field_enable_content_permissions' ), 'memberscontrol-settings', 'content_permissions' );
+		add_settings_field( 'content_permissions_error',  esc_html__( 'Error Message',      'memberscontrol' ), array( $this, 'field_content_permissions_error'  ), 'memberscontrol-settings', 'content_permissions' );
 
 		// Private site fields.
-		add_settings_field( 'enable_private_site', esc_html__( 'Enable Private Site', 'members' ), array( $this, 'field_enable_private_site' ), 'members-settings', 'private_site' );
-		add_settings_field( 'private_rest_api',    esc_html__( 'REST API',            'members' ), array( $this, 'field_private_rest_api'    ), 'members-settings', 'private_site' );
-		add_settings_field( 'enable_private_feed', esc_html__( 'Disable Feed',        'members' ), array( $this, 'field_enable_private_feed' ), 'members-settings', 'private_site' );
-		add_settings_field( 'private_feed_error',  esc_html__( 'Feed Error Message',  'members' ), array( $this, 'field_private_feed_error'  ), 'members-settings', 'private_site' );
+		add_settings_field( 'enable_private_site', esc_html__( 'Enable Private Site', 'memberscontrol' ), array( $this, 'field_enable_private_site' ), 'memberscontrol-settings', 'private_site' );
+		add_settings_field( 'private_rest_api',    esc_html__( 'REST API',            'memberscontrol' ), array( $this, 'field_private_rest_api'    ), 'memberscontrol-settings', 'private_site' );
+		add_settings_field( 'enable_private_feed', esc_html__( 'Disable Feed',        'memberscontrol' ), array( $this, 'field_enable_private_feed' ), 'memberscontrol-settings', 'private_site' );
+		add_settings_field( 'private_feed_error',  esc_html__( 'Feed Error Message',  'memberscontrol' ), array( $this, 'field_private_feed_error'  ), 'memberscontrol-settings', 'private_site' );
 	}
 
 	/**
 	 * Validates the plugin settings.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  array  $input
-	 * @return array
 	 */
 	function validate_settings( $settings ) {
 
@@ -111,39 +75,27 @@ class View_General extends View {
 
 	/**
 	 * Role/Caps section callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function section_roles_caps() { ?>
 
 		<p class="description">
-			<?php esc_html_e( 'Your roles and capabilities will not revert back to their previous settings after deactivating or uninstalling this plugin, so use this feature wisely.', 'members' ); ?>
+			<?php esc_html_e( 'Your roles and capabilities will not revert back to their previous settings after deactivating or uninstalling this plugin, so use this feature wisely.', 'memberscontrol' ); ?>
 		</p>
 	<?php }
 
 	/**
 	 * Role manager field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_enable_role_manager() { ?>
 
 		<label>
-			<input type="checkbox" name="members_settings[role_manager]" value="true" <?php checked( members_role_manager_enabled() ); ?> />
-			<?php esc_html_e( 'Enable the role manager.', 'members' ); ?>
+			<input type="checkbox" name="memberscontrol_settings[role_manager]" value="true" <?php checked( memberscontrol_role_manager_enabled() ); ?> />
+			<?php esc_html_e( 'Enable the role manager.', 'memberscontrol' ); ?>
 		</label>
 	<?php }
 
 	/**
 	 * Explicit denied caps field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_explicit_denied_caps() { ?>
 
@@ -151,15 +103,15 @@ class View_General extends View {
 
 			<p>
 				<label>
-					<input type="checkbox" name="members_settings[explicit_denied_caps]" value="true" <?php checked( members_explicitly_deny_caps() ); ?> />
-					<?php esc_html_e( 'Denied capabilities should always overrule granted capabilities.', 'members' ); ?>
+					<input type="checkbox" name="memberscontrol_settings[explicit_denied_caps]" value="true" <?php checked( memberscontrol_explicitly_deny_caps() ); ?> />
+					<?php esc_html_e( 'Denied capabilities should always overrule granted capabilities.', 'memberscontrol' ); ?>
 				</label>
 			</p>
 
 			<p>
 				<label>
-					<input type="checkbox" name="members_settings[show_human_caps]" value="true" <?php checked( members_show_human_caps() ); ?> />
-					<?php esc_html_e( 'Show human-readable capabilities when possible.', 'members' ); ?>
+					<input type="checkbox" name="memberscontrol_settings[show_human_caps]" value="true" <?php checked( memberscontrol_show_human_caps() ); ?> />
+					<?php esc_html_e( 'Show human-readable capabilities when possible.', 'memberscontrol' ); ?>
 				</label>
 			</p>
 
@@ -168,48 +120,36 @@ class View_General extends View {
 
 	/**
 	 * Multiple roles field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_enable_multi_roles() { ?>
 
 		<label>
-			<input type="checkbox" name="members_settings[multi_roles]" value="true" <?php checked( members_multiple_user_roles_enabled() ); ?> />
-			<?php esc_html_e( 'Allow users to be assigned more than a single role.', 'members' ); ?>
+			<input type="checkbox" name="memberscontrol_settings[multi_roles]" value="true" <?php checked( memberscontrol_multiple_user_roles_enabled() ); ?> />
+			<?php esc_html_e( 'Allow users to be assigned more than a single role.', 'memberscontrol' ); ?>
 		</label>
 	<?php }
 
 	/**
 	 * Enable content permissions field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_enable_content_permissions() { ?>
 
 		<label>
-			<input type="checkbox" name="members_settings[content_permissions]" value="true" <?php checked( members_content_permissions_enabled() ); ?> />
-			<?php esc_html_e( 'Enable the content permissions feature.', 'members' ); ?>
+			<input type="checkbox" name="memberscontrol_settings[content_permissions]" value="true" <?php checked( memberscontrol_content_permissions_enabled() ); ?> />
+			<?php esc_html_e( 'Enable the content permissions feature.', 'memberscontrol' ); ?>
 		</label>
 	<?php }
 
 	/**
 	 * Content permissions error message field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_content_permissions_error() {
 
 		wp_editor(
-			members_get_setting( 'content_permissions_error' ),
-			'members_settings_content_permissions_error',
+			memberscontrol_get_setting( 'content_permissions_error' ),
+			'memberscontrol_settings_content_permissions_error',
 			array(
-				'textarea_name'    => 'members_settings[content_permissions_error]',
+				'textarea_name'    => 'memberscontrol_settings[content_permissions_error]',
 				'drag_drop_upload' => true,
 				'editor_height'    => 250
 			)
@@ -218,63 +158,47 @@ class View_General extends View {
 
 	/**
 	 * Enable private site field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_enable_private_site() { ?>
 
 		<label>
-			<input type="checkbox" name="members_settings[private_blog]" value="true" <?php checked( members_is_private_blog() ); ?> />
-			<?php esc_html_e( 'Redirect all logged-out users to the login page before allowing them to view the site.', 'members' ); ?>
+			<input type="checkbox" name="memberscontrol_settings[private_blog]" value="true" <?php checked( memberscontrol_is_private_blog() ); ?> />
+			<?php esc_html_e( 'Redirect all logged-out users to the login page before allowing them to view the site.', 'memberscontrol' ); ?>
 		</label>
 	<?php }
 
 	/**
 	 * Enable private REST API field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_private_rest_api() { ?>
 
 		<label>
-			<input type="checkbox" name="members_settings[private_rest_api]" value="true" <?php checked( members_is_private_rest_api() ); ?> />
-			<?php esc_html_e( 'Require authentication for access to the REST API.', 'members' ); ?>
+			<input type="checkbox" name="memberscontrol_settings[private_rest_api]" value="true" <?php checked( memberscontrol_is_private_rest_api() ); ?> />
+			<?php esc_html_e( 'Require authentication for access to the REST API.', 'memberscontrol' ); ?>
 		</label>
 	<?php }
 
 	/**
 	 * Enable private feed field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_enable_private_feed() { ?>
 
 		<label>
-			<input type="checkbox" name="members_settings[private_feed]" value="true" <?php checked( members_is_private_feed() ); ?> />
-			<?php esc_html_e( 'Show error message for feed items.', 'members' ); ?>
+			<input type="checkbox" name="memberscontrol_settings[private_feed]" value="true" <?php checked( memberscontrol_is_private_feed() ); ?> />
+			<?php esc_html_e( 'Show error message for feed items.', 'memberscontrol' ); ?>
 		</label>
 	<?php }
 
 	/**
 	 * Private feed error message field callback.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function field_private_feed_error() {
 
 		wp_editor(
-			members_get_setting( 'private_feed_error' ),
-			'members_settings_private_feed_error',
+			memberscontrol_get_setting( 'private_feed_error' ),
+			'memberscontrol_settings_private_feed_error',
 			array(
-				'textarea_name'    => 'members_settings[private_feed_error]',
+				'textarea_name'    => 'memberscontrol_settings[private_feed_error]',
 				'drag_drop_upload' => true,
 				'editor_height'    => 250
 			)
@@ -283,27 +207,19 @@ class View_General extends View {
 
 	/**
 	 * Renders the settings page.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function template() { ?>
 
 		<form method="post" action="options.php">
-			<?php settings_fields( 'members_settings' ); ?>
-			<?php do_settings_sections( 'members-settings' ); ?>
-			<?php submit_button( esc_attr__( 'Update Settings', 'members' ), 'primary' ); ?>
+			<?php settings_fields( 'memberscontrol_settings' ); ?>
+			<?php do_settings_sections( 'memberscontrol-settings' ); ?>
+			<?php submit_button( esc_attr__( 'Update Settings', 'memberscontrol' ), 'primary' ); ?>
 		</form>
 
 	<?php }
 
 	/**
 	 * Adds help tabs.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function add_help_tabs() {
 
@@ -314,7 +230,7 @@ class View_General extends View {
 		$screen->add_help_tab(
 			array(
 				'id'       => 'roles-caps',
-				'title'    => esc_html__( 'Role and Capabilities', 'members' ),
+				'title'    => esc_html__( 'Role and Capabilities', 'memberscontrol' ),
 				'callback' => array( $this, 'help_tab_roles_caps' )
 			)
 		);
@@ -323,7 +239,7 @@ class View_General extends View {
 		$screen->add_help_tab(
 			array(
 				'id'       => 'content-permissions',
-				'title'    => esc_html__( 'Content Permissions', 'members' ),
+				'title'    => esc_html__( 'Content Permissions', 'memberscontrol' ),
 				'callback' => array( $this, 'help_tab_content_permissions' )
 			)
 		);
@@ -332,7 +248,7 @@ class View_General extends View {
 		$screen->add_help_tab(
 			array(
 				'id'       => 'sidebar-widgets',
-				'title'    => esc_html__( 'Sidebar Widgets', 'members' ),
+				'title'    => esc_html__( 'Sidebar Widgets', 'memberscontrol' ),
 				'callback' => array( $this, 'help_tab_sidebar_widgets' )
 			)
 		);
@@ -341,80 +257,64 @@ class View_General extends View {
 		$screen->add_help_tab(
 			array(
 				'id'       => 'private-site',
-				'title'    => esc_html__( 'Private Site', 'members' ),
+				'title'    => esc_html__( 'Private Site', 'memberscontrol' ),
 				'callback' => array( $this, 'help_tab_private_site' )
 			)
 		);
 
 		// Set the help sidebar.
-		$screen->set_help_sidebar( members_get_help_sidebar_text() );
+		$screen->set_help_sidebar( memberscontrol_get_help_sidebar_text() );
 	}
 
 	/**
 	 * Displays the roles/caps help tab.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function help_tab_roles_caps() { ?>
 
 		<p>
-			<?php esc_html_e( 'The role manager allows you to manage roles on your site by giving you the ability to create, edit, and delete any role. Note that changes to roles do not change settings for the Members plugin. You are literally changing data in your WordPress database. This plugin feature merely provides an interface for you to make these changes.', 'members' ); ?>
+			<?php esc_html_e( 'The role manager allows you to manage roles on your site by giving you the ability to create, edit, and delete any role. Note that changes to roles do not change settings for the Members plugin. You are literally changing data in your WordPress database. This plugin feature merely provides an interface for you to make these changes.', 'memberscontrol' ); ?>
 		</p>
 
 		<p>
-			<?php esc_html_e( 'The multiple user roles feature allows you to assign more than one role to each user from the edit user screen.', 'members' ); ?>
+			<?php esc_html_e( 'The multiple user roles feature allows you to assign more than one role to each user from the edit user screen.', 'memberscontrol' ); ?>
 		</p>
 
 		<p>
-			<?php esc_html_e( 'Tick the checkbox for denied capabilities to always take precedence over granted capabilities when there is a conflict. This is only relevant when using multiple roles per user.', 'members' ); ?>
+			<?php esc_html_e( 'Tick the checkbox for denied capabilities to always take precedence over granted capabilities when there is a conflict. This is only relevant when using multiple roles per user.', 'memberscontrol' ); ?>
 		</p>
 
 		<p>
-			<?php esc_html_e( 'Tick the checkbox to show human-readable capabilities when possible. Note that custom capabilities and capabilities from third-party plugins will show the machine-readable capability name unless they are registered.', 'members' ); ?>
+			<?php esc_html_e( 'Tick the checkbox to show human-readable capabilities when possible. Note that custom capabilities and capabilities from third-party plugins will show the machine-readable capability name unless they are registered.', 'memberscontrol' ); ?>
 		</p>
 	<?php }
 
 	/**
 	 * Displays the content permissions help tab.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function help_tab_content_permissions() { ?>
 
 		<p>
-			<?php printf( esc_html__( "The content permissions features adds a meta box to the edit post screen that allows you to grant permissions for who can read the post content based on the user's role. Only users of roles with the %s capability will be able to use this component.", 'members' ), '<code>restrict_content</code>' ); ?>
+			<?php printf( esc_html__( "The content permissions features adds a meta box to the edit post screen that allows you to grant permissions for who can read the post content based on the user's role. Only users of roles with the %s capability will be able to use this component.", 'memberscontrol' ), '<code>restrict_content</code>' ); ?>
 		</p>
 	<?php }
 
 	/**
 	 * Displays the sidebar widgets help tab.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function help_tab_sidebar_widgets() { ?>
 
 		<p>
-			<?php esc_html_e( "The sidebar widgets feature adds additional widgets for use in your theme's sidebars.", 'members' ); ?>
+			<?php esc_html_e( "The sidebar widgets feature adds additional widgets for use in your theme's sidebars.", 'memberscontrol' ); ?>
 		</p>
 	<?php }
 
 	/**
 	 * Displays the private site help tab.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function help_tab_private_site() { ?>
 
 		<p>
-			<?php esc_html_e( 'The private site feature redirects all users who are not logged into the site to the login page, creating an entirely private site. You may also replace your feed content with a custom error message.', 'members' ); ?>
+			<?php esc_html_e( 'The private site feature redirects all users who are not logged into the site to the login page, creating an entirely private site. You may also replace your feed content with a custom error message.', 'memberscontrol' ); ?>
 		</p>
 	<?php }
 }

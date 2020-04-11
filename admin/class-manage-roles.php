@@ -1,74 +1,29 @@
 <?php
 /**
  * Role management.  This is the base class for the Roles and Edit Role screens.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-namespace Members\Admin;
+namespace MembersControl\Admin;
 
 /**
  * Role management class.
- *
- * @since  2.0.0
- * @access public
  */
 final class Manage_Roles {
 
-	/**
-	 * Holds the instances of this class.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @var    object
-	 */
 	private static $instance;
 
-	/**
-	 * Name of the page we've created.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @var    string
-	 */
 	public $page = '';
 
-	/**
-	 * The page object to show.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @var    object
-	 */
 	public $page_obj = '';
 
-	/**
-	 * Sets up our initial actions.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function __construct() {
 
 		// If the role manager is active.
-		if ( members_role_manager_enabled() ) {
+		if ( memberscontrol_role_manager_enabled() ) {
 			add_action( 'admin_menu', array( $this, 'add_admin_page' ), 15 );
 		}
 	}
 
-	/**
-	 * Adds the roles page to the admin.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function add_admin_page() {
 
 		// The "Roles" page should be shown for anyone that has the 'list_roles', 'edit_roles', or
@@ -87,10 +42,10 @@ final class Manage_Roles {
 		$title = esc_html__( 'Roles', 'members' );
 
 		if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] && isset( $_GET['role'] ) )
-			$title = esc_html__( 'Edit Role', 'members' );
+			$title = esc_html__( 'Edit Role', 'memberscontrol' );
 
 		// Create the Manage Roles page.
-		$this->page = add_submenu_page( 'members', $title, esc_html__( 'Roles', 'members' ), $edit_roles_cap, 'roles', array( $this, 'page' ) );
+		$this->page = add_submenu_page( 'memberscontrol', $title, esc_html__( 'Roles', 'memberscontrol' ), $edit_roles_cap, 'roles', array( $this, 'page' ) );
 
 		// Let's roll if we have a page.
 		if ( $this->page ) {
@@ -113,10 +68,6 @@ final class Manage_Roles {
 
 	/**
 	 * Checks posted data on load and performs actions if needed.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function load() {
 
@@ -126,11 +77,6 @@ final class Manage_Roles {
 
 	/**
 	 * Loads necessary scripts/styles.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  string  $hook_suffix
-	 * @return void
 	 */
 	public function enqueue( $hook_suffix ) {
 
@@ -140,10 +86,6 @@ final class Manage_Roles {
 
 	/**
 	 * Outputs the page.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function page() {
 
@@ -153,10 +95,6 @@ final class Manage_Roles {
 
 	/**
 	 * Returns the instance.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return object
 	 */
 	public static function get_instance() {
 

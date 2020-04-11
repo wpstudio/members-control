@@ -1,18 +1,11 @@
 <?php
 /**
  * User-related functions and filters.
- *
- * @package    Members
- * @subpackage Includes
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
 // Filter `user_has_cap` if denied caps should take precedence.
-if ( members_explicitly_deny_caps() ) {
-	add_filter( 'user_has_cap', 'members_user_has_cap_filter', 10, 4 );
+if ( memberscontrol_explicitly_deny_caps() ) {
+	add_filter( 'user_has_cap', 'memberscontrol_user_has_cap_filter', 10, 4 );
 }
 
 /**
@@ -22,16 +15,8 @@ if ( members_explicitly_deny_caps() ) {
  * merges the role caps so that the last role the user has will take precedence.  This
  * has the potential for granting permission for things that a user shouldn't have
  * permission to do.
- *
- * @since  1.0.0
- * @access public
- * @param  array  $allcaps
- * @param  array  $caps
- * @param  array  $args
- * @param  object $user
- * @return array
  */
-function members_user_has_cap_filter( $allcaps, $caps, $args, $user ) {
+function memberscontrol_user_has_cap_filter( $allcaps, $caps, $args, $user ) {
 
 	// If the user doesn't have more than one role, bail.
 	if ( 1 >= count( (array) $user->roles ) )
@@ -69,14 +54,8 @@ function members_user_has_cap_filter( $allcaps, $caps, $args, $user ) {
 
 /**
  * Conditional tag to check whether a user has a specific role.
- *
- * @since  1.0.0
- * @access public
- * @param  int           $user_id
- * @param  string|array  $roles
- * @return bool
  */
-function members_user_has_role( $user_id, $roles ) {
+function memberscontrol_user_has_role( $user_id, $roles ) {
 
 	$user = new WP_User( $user_id );
 
@@ -91,27 +70,17 @@ function members_user_has_role( $user_id, $roles ) {
 
 /**
  * Conditional tag to check whether the currently logged-in user has a specific role.
- *
- * @since  1.0.0
- * @access public
- * @param  string|array  $roles
- * @return bool
  */
-function members_current_user_has_role( $roles ) {
+function memberscontrol_current_user_has_role( $roles ) {
 
-	return is_user_logged_in() ? members_user_has_role( get_current_user_id(), $roles ) : false;
+	return is_user_logged_in() ? memberscontrol_user_has_role( get_current_user_id(), $roles ) : false;
 }
 
 /**
  * Wrapper for `current_user_can()` that checks if the user can perform any action.
  * Accepts an array of caps instead of a single cap.
- *
- * @since  2.0.0
- * @access public
- * @param  array   $caps
- * @return bool
  */
-function members_current_user_can_any( $caps = array() ) {
+function memberscontrol_current_user_can_any( $caps = array() ) {
 
 	foreach ( $caps as $cap ) {
 
@@ -125,13 +94,8 @@ function members_current_user_can_any( $caps = array() ) {
 /**
  * Wrapper for `current_user_can()` that checks if the user can perform all actions.
  * Accepts an array of caps instead of a single cap.
- *
- * @since  2.0.0
- * @access public
- * @param  array   $caps
- * @return bool
  */
-function members_current_user_can_all( $caps = array() ) {
+function memberscontrol_current_user_can_all( $caps = array() ) {
 
 	foreach ( $caps as $cap ) {
 
@@ -144,20 +108,15 @@ function members_current_user_can_all( $caps = array() ) {
 
 /**
  * Returns an array of the role names a user has.
- *
- * @since  1.0.0
- * @access public
- * @param  int    $user_id
- * @return array
  */
-function members_get_user_role_names( $user_id ) {
+function memberscontrol_get_user_role_names( $user_id ) {
 
 	$user = new WP_User( $user_id );
 
 	$names = array();
 
 	foreach ( $user->roles as $role )
-		$names[ $role ] = members_get_role( $role )->get( 'label' );
+		$names[ $role ] = memberscontrol_get_role( $role )->get( 'label' );
 
 	return $names;
 }

@@ -1,63 +1,25 @@
 <?php
 /**
  * Handles custom functionality on the manage users screen.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-namespace Members\Admin;
+namespace MembersControl\Admin;
 
 /**
  * Manager users screen class.
- *
- * @since  2.0.0
- * @access public
  */
 final class Manage_Users {
 
-	/**
-	 * Holds the instances of this class.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @var    object
-	 */
 	private static $instance = null;
 
-	/**
-	 * Custom admin notices.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @var    array
-	 */
 	public $notices = array();
 
-	/**
-	 * Constructore method.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @return void
-	 */
 	private function __construct() {}
 
-	/**
-	 * Sets up needed actions/filters.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @return void
-	 */
 	private function setup_actions() {
 
 		// If multiple roles per user is not enabled, bail.
-		if ( ! members_multiple_user_roles_enabled() )
+		if ( ! memberscontrol_multiple_user_roles_enabled() )
 			return;
 
 		// Add our primary actions to the load hook.
@@ -66,13 +28,6 @@ final class Manage_Users {
 		add_action( 'load-users.php', array( $this, 'role_bulk_remove' ) );
 	}
 
-	/**
-	 * Adds actions/filters on load.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function load() {
 
 		// Add custom bulk fields.
@@ -92,19 +47,19 @@ final class Manage_Users {
 			$action = sanitize_key( $_GET['update'] );
 
 			// If a role was added.
-			if ( 'members-role-added' === $action ) {
+			if ( 'memberscontrol-role-added' === $action ) {
 
-				$this->notices['role_added'] = array( 'message' => esc_html__( 'Role added to selected users.', 'members' ), 'type' => 'success' );
+				$this->notices['role_added'] = array( 'message' => esc_html__( 'Role added to selected users.', 'memberscontrol' ), 'type' => 'success' );
 
 			// If a role was removed.
-			} elseif ( 'members-role-removed' === $action ) {
+			} elseif ( 'memberscontrol-role-removed' === $action ) {
 
-				$this->notices['role_removed'] = array( 'message' => esc_html__( 'Role removed from selected users.', 'members' ), 'type' => 'success' );
+				$this->notices['role_removed'] = array( 'message' => esc_html__( 'Role removed from selected users.', 'memberscontrol' ), 'type' => 'success' );
 
-			} elseif ( 'members-error-remove-admin' === $action ) {
+			} elseif ( 'memberscontrol-error-remove-admin' === $action ) {
 
-				$this->notices['error_remove_admin'] = array( 'message' => esc_html__( 'The current user&#8217;s role must have user editing capabilities.', 'members' ), 'type' => 'error' );
-				$this->notices['role_removed'] = array( 'message' => esc_html__( 'Role removed from other selected users.', 'members' ), 'type' => 'success' );
+				$this->notices['error_remove_admin'] = array( 'message' => esc_html__( 'The current user&#8217;s role must have user editing capabilities.', 'memberscontrol' ), 'type' => 'error' );
+				$this->notices['role_removed'] = array( 'message' => esc_html__( 'Role removed from other selected users.', 'memberscontrol' ), 'type' => 'success' );
 			}
 
 			// If we have notices, hook them in.
@@ -115,10 +70,6 @@ final class Manage_Users {
 
 	/**
 	 * Adds a single role to users in bulk.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function role_bulk_add() {
 
@@ -127,21 +78,21 @@ final class Manage_Users {
 			return;
 
 		// Figure out if we have a role selected.
-		if ( ! empty( $_REQUEST['members-add-role-top'] ) && ! empty( $_REQUEST['members-add-role-submit-top'] ) )
-			$role = members_sanitize_role( $_REQUEST['members-add-role-top'] );
+		if ( ! empty( $_REQUEST['memberscontrol-add-role-top'] ) && ! empty( $_REQUEST['memberscontrol-add-role-submit-top'] ) )
+			$role = memberscontrol_sanitize_role( $_REQUEST['memberscontrol-add-role-top'] );
 
-		elseif ( ! empty( $_REQUEST['members-add-role-bottom'] ) && ! empty( $_REQUEST['members-add-role-submit-bottom'] ) )
-			$role = members_sanitize_role( $_REQUEST['members-add-role-bottom'] );
+		elseif ( ! empty( $_REQUEST['memberscontrol-add-role-bottom'] ) && ! empty( $_REQUEST['memberscontrol-add-role-submit-bottom'] ) )
+			$role = memberscontrol_sanitize_role( $_REQUEST['memberscontrol-add-role-bottom'] );
 
 		// Get only editable roles.
-		$editable_roles = members_get_editable_roles();
+		$editable_roles = memberscontrol_get_editable_roles();
 
 		// If we don't have a role or the role is not editable, bail.
 		if ( empty( $role ) || ! in_array( $role, $editable_roles ) )
 			return;
 
 		// Validate our nonce.
-		check_admin_referer( 'members-bulk-users', 'members-bulk-users-nonce' );
+		check_admin_referer( 'memberscontrol-bulk-users', 'memberscontrol-bulk-users-nonce' );
 
 		// If the current user cannot promote users, bail.
 		if ( ! current_user_can( 'promote_users' ) )
@@ -158,8 +109,8 @@ final class Manage_Users {
 				wp_die(
 					sprintf(
 						'<h1>%s</h1> <p>%s</p>',
-						esc_html__( 'Whoah, partner!', 'members' ),
-						esc_html__( 'One of the selected users is not a member of this site.', 'members' )
+						esc_html__( 'Whoah, partner!', 'memberscontrol' ),
+						esc_html__( 'One of the selected users is not a member of this site.', 'memberscontrol' )
 					),
 					403
 				);
@@ -178,15 +129,11 @@ final class Manage_Users {
 		}
 
 		// Redirect to the users screen.
-		wp_redirect( add_query_arg( 'update', 'members-role-added', 'users.php' ) );
+		wp_redirect( add_query_arg( 'update', 'memberscontrol-role-added', 'users.php' ) );
 	}
 
 	/**
 	 * Removes a single role from users in bulk.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function role_bulk_remove() {
 
@@ -195,21 +142,21 @@ final class Manage_Users {
 			return;
 
 		// Figure out if we have a role selected.
-		if ( ! empty( $_REQUEST['members-remove-role-top'] ) && ! empty( $_REQUEST['members-remove-role-submit-top'] ) )
-			$role = members_sanitize_role( $_REQUEST['members-remove-role-top'] );
+		if ( ! empty( $_REQUEST['memberscontrol-remove-role-top'] ) && ! empty( $_REQUEST['memberscontrol-remove-role-submit-top'] ) )
+			$role = memberscontrol_sanitize_role( $_REQUEST['memberscontrol-remove-role-top'] );
 
-		elseif ( ! empty( $_REQUEST['members-remove-role-bottom'] ) && ! empty( $_REQUEST['members-remove-role-submit-bottom'] ) )
-			$role = members_sanitize_role( $_REQUEST['members-remove-role-bottom'] );
+		elseif ( ! empty( $_REQUEST['memberscontrol-remove-role-bottom'] ) && ! empty( $_REQUEST['memberscontrol-remove-role-submit-bottom'] ) )
+			$role = memberscontrol_sanitize_role( $_REQUEST['memberscontrol-remove-role-bottom'] );
 
 		// Get only editable roles.
-		$editable_roles = members_get_editable_roles();
+		$editable_roles = memberscontrol_get_editable_roles();
 
 		// If we don't have a role or the role is not editable, bail.
 		if ( empty( $role ) || ! in_array( $role, $editable_roles ) )
 			return;
 
 		// Validate our nonce.
-		check_admin_referer( 'members-bulk-users', 'members-bulk-users-nonce' );
+		check_admin_referer( 'memberscontrol-bulk-users', 'memberscontrol-bulk-users-nonce' );
 
 		// If the current user cannot promote users, bail.
 		if ( ! current_user_can( 'promote_users' ) )
@@ -218,9 +165,9 @@ final class Manage_Users {
 		// Get the current user.
 		$current_user = wp_get_current_user();
 
-		$m_role = members_get_role( $role );
+		$m_role = memberscontrol_get_role( $role );
 
-		$update = 'members-role-removed';
+		$update = 'memberscontrol-role-removed';
 
 		// Loop through the users and remove the role if possible.
 		foreach ( (array) $_REQUEST['users'] as $user_id ) {
@@ -233,8 +180,8 @@ final class Manage_Users {
 				wp_die(
 					sprintf(
 						'<h1>%s</h1> <p>%s</p>',
-						esc_html__( 'Whoah, partner!', 'members' ),
-						esc_html__( 'One of the selected users is not a member of this site.', 'members' )
+						esc_html__( 'Whoah, partner!', 'memberscontrol' ),
+						esc_html__( 'One of the selected users is not a member of this site.', 'memberscontrol' )
 					),
 					403
 				);
@@ -259,7 +206,7 @@ final class Manage_Users {
 					// If the current user has another role that can promote users, it's
 					// safe to remove the role.  Else, the current user needs to keep
 					// the role.
-					if ( $role !== $_r && in_array( 'promote_users', members_get_role( $_r )->granted_caps ) ) {
+					if ( $role !== $_r && in_array( 'promote_users', memberscontrol_get_role( $_r )->granted_caps ) ) {
 
 						$can_remove = true;
 						break;
@@ -267,7 +214,7 @@ final class Manage_Users {
 				}
 
 				if ( ! $can_remove ) {
-					$update = 'members-error-remove-admin';
+					$update = 'memberscontrol-error-remove-admin';
 					continue;
 				}
 			}
@@ -286,11 +233,6 @@ final class Manage_Users {
 
 	/**
 	 * Print admin notices.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  string  $which
-	 * @return void
 	 */
 	public function notices() {
 
@@ -309,68 +251,51 @@ final class Manage_Users {
 
 	/**
 	 * Outputs "add role" and "remove role" dropdown select fields.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  string  $which
-	 * @return void
 	 */
 	public function bulk_fields( $which ) {
 
 		if ( ! current_user_can( 'promote_users' ) )
 			return;
 
-		wp_nonce_field( 'members-bulk-users', 'members-bulk-users-nonce' ); ?>
+		wp_nonce_field( 'memberscontrol-bulk-users', 'memberscontrol-bulk-users-nonce' ); ?>
 
-		<label class="screen-reader-text" for="<?php echo esc_attr( "members-add-role-{$which}" ); ?>">
-			<?php esc_html_e( 'Add role&hellip;', 'members' ); ?>
+		<label class="screen-reader-text" for="<?php echo esc_attr( "memberscontrol-add-role-{$which}" ); ?>">
+			<?php esc_html_e( 'Add role&hellip;', 'memberscontrol' ); ?>
 		</label>
 
-		<select name="<?php echo esc_attr( "members-add-role-{$which}" ); ?>" id="<?php echo esc_attr( "members-add-role-{$which}" ); ?>" style="display: inline-block; float: none;">
-			<option value=""><?php esc_html_e( 'Add role&hellip;', 'members' ); ?></option>
+		<select name="<?php echo esc_attr( "memberscontrol-add-role-{$which}" ); ?>" id="<?php echo esc_attr( "memberscontrol-add-role-{$which}" ); ?>" style="display: inline-block; float: none;">
+			<option value=""><?php esc_html_e( 'Add role&hellip;', 'memberscontrol' ); ?></option>
 			<?php wp_dropdown_roles(); ?>
 		</select>
 
-		<?php submit_button( esc_html__( 'Add', 'members' ), 'secondary', esc_attr( "members-add-role-submit-{$which}" ), false ); ?>
+		<?php submit_button( esc_html__( 'Add', 'memberscontrol' ), 'secondary', esc_attr( "memberscontrol-add-role-submit-{$which}" ), false ); ?>
 
-		<label class="screen-reader-text" for="<?php echo esc_attr( "members-remove-role-{$which}" ); ?>">
-			<?php esc_html_e( 'Remove role&hellip;', 'members' ); ?>
+		<label class="screen-reader-text" for="<?php echo esc_attr( "memberscontrol-remove-role-{$which}" ); ?>">
+			<?php esc_html_e( 'Remove role&hellip;', 'memberscontrol' ); ?>
 		</label>
 
-		<select name="<?php echo esc_attr( "members-remove-role-{$which}" ); ?>" id="<?php echo esc_attr( "members-remove-role-{$which}" ); ?>" style="display: inline-block; float: none;">
-			<option value=""><?php esc_html_e( 'Remove role&hellip;', 'members' ); ?></option>
+		<select name="<?php echo esc_attr( "memberscontrol-remove-role-{$which}" ); ?>" id="<?php echo esc_attr( "memberscontrol-remove-role-{$which}" ); ?>" style="display: inline-block; float: none;">
+			<option value=""><?php esc_html_e( 'Remove role&hellip;', 'memberscontrol' ); ?></option>
 			<?php wp_dropdown_roles(); ?>
 		</select>
 
-		<?php submit_button( esc_html__( 'Remove', 'members' ), 'secondary', esc_attr( "members-remove-role-submit-{$which}" ), false );
+		<?php submit_button( esc_html__( 'Remove', 'memberscontrol' ), 'secondary', esc_attr( "memberscontrol-remove-role-submit-{$which}" ), false );
 	}
 
 	/**
 	 * Handles table column headers.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  array  $columns
-	 * @return array
 	 */
 	public function manage_users_columns( $columns ) {
 
 		// Make sure role column is named correctly.
 		if ( isset( $columns['role'] ) )
-			$columns['role'] = esc_html__( 'Roles', 'members' );
+			$columns['role'] = esc_html__( 'Roles', 'memberscontrol' );
 
 		return $columns;
 	}
 
 	/**
 	 * Handles the output of the roles column on the `users.php` screen.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  string  $output
-	 * @param  string  $column
-	 * @param  int     $user_id
-	 * @return string
 	 */
 	public function manage_users_custom_column( $output, $column, $user_id ) {
 
@@ -379,14 +304,14 @@ final class Manage_Users {
 			$user = new \WP_User( $user_id );
 
 			$user_roles = array();
-			$output = esc_html__( 'None', 'members' );
+			$output = esc_html__( 'None', 'memberscontrol' );
 
 			if ( is_array( $user->roles ) ) {
 
 				foreach ( $user->roles as $role ) {
 
-					if ( members_role_exists( $role ) )
-						$user_roles[] = members_translate_role( $role );
+					if ( memberscontrol_role_exists( $role ) )
+						$user_roles[] = memberscontrol_translate_role( $role );
 				}
 
 				$output = join( ', ', $user_roles );
@@ -398,10 +323,6 @@ final class Manage_Users {
 
 	/**
 	 * Enqueue scripts.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function enqueue() {
 
@@ -410,10 +331,6 @@ final class Manage_Users {
 
 	/**
 	 * Enqueue the plugin admin CSS.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function print_scripts() { ?>
 
@@ -430,10 +347,6 @@ final class Manage_Users {
 
 	/**
 	 * Hides the core WP change role form fields because these are hardcoded in.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
 	 */
 	public function print_styles() { ?>
 
@@ -446,10 +359,6 @@ final class Manage_Users {
 
 	/**
 	 * Returns the instance.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return object
 	 */
 	public static function get_instance() {
 

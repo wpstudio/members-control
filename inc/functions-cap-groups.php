@@ -1,45 +1,30 @@
 <?php
 /**
  * Capability groups API. Offers a standardized method for creating capability groups.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
 # Registers default groups.
-add_action( 'init',                        'members_register_cap_groups',         95 );
-add_action( 'members_register_cap_groups', 'members_register_default_cap_groups',  5 );
+add_action( 'init',                        'memberscontrol_register_cap_groups',         95 );
+add_action( 'memberscontrol_register_cap_groups', 'memberscontrol_register_default_cap_groups',  5 );
 
 /**
  * Fires the cap group registration action hook.
- *
- * @since  1.0.0
- * @access public
- * @return void
  */
-function members_register_cap_groups() {
+function memberscontrol_register_cap_groups() {
 
 	// Hook for registering cap groups. Plugins should always register on this hook.
-	do_action( 'members_register_cap_groups' );
+	do_action( 'memberscontrol_register_cap_groups' );
 }
 
 /**
  * Registers the default cap groups.
- *
- * @since  2.0.0
- * @access public
- * @return void
  */
-function members_register_default_cap_groups() {
+function memberscontrol_register_default_cap_groups() {
 
 	// Registers the general group.
-	members_register_cap_group( 'general',
+	memberscontrol_register_cap_group( 'general',
 		array(
-			'label'    => esc_html__( 'General', 'members' ),
+			'label'    => esc_html__( 'General', 'memberscontrol' ),
 			'icon'     => 'dashicons-wordpress',
 			'priority' => 5
 		)
@@ -53,7 +38,7 @@ function members_register_default_cap_groups() {
 			continue;
 
 		// Get the caps for the post type.
-		$has_caps = members_get_post_type_group_caps( $type->name );
+		$has_caps = memberscontrol_get_post_type_group_caps( $type->name );
 
 		// Skip if the post type doesn't have caps.
 		if ( empty( $has_caps ) )
@@ -76,7 +61,7 @@ function members_register_default_cap_groups() {
 			$icon = 'dashicons-cart';
 
 		// Register the post type cap group.
-		members_register_cap_group( "type-{$type->name}",
+		memberscontrol_register_cap_group( "type-{$type->name}",
 			array(
 				'label'    => $type->labels->name,
 				'caps'     => $has_caps,
@@ -87,10 +72,10 @@ function members_register_default_cap_groups() {
 	}
 
 	// Register the taxonomy group.
-	members_register_cap_group( 'taxonomy',
+	memberscontrol_register_cap_group( 'taxonomy',
 		array(
-			'label'      => esc_html__( 'Taxonomies', 'members' ),
-			'caps'       => members_get_taxonomy_group_caps(),
+			'label'      => esc_html__( 'Taxonomies', 'memberscontrol' ),
+			'caps'       => memberscontrol_get_taxonomy_group_caps(),
 			'icon'       => 'dashicons-tag',
 			'diff_added' => true,
 			'priority'   => 15
@@ -98,37 +83,37 @@ function members_register_default_cap_groups() {
 	);
 
 	// Register the theme group.
-	members_register_cap_group( 'theme',
+	memberscontrol_register_cap_group( 'theme',
 		array(
-			'label'    => esc_html__( 'Appearance', 'members' ),
+			'label'    => esc_html__( 'Appearance', 'memberscontrol' ),
 			'icon'     => 'dashicons-admin-appearance',
 			'priority' => 20
 		)
 	);
 
 	// Register the plugin group.
-	members_register_cap_group( 'plugin',
+	memberscontrol_register_cap_group( 'plugin',
 		array(
-			'label'    => esc_html__( 'Plugins', 'members' ),
+			'label'    => esc_html__( 'Plugins', 'memberscontrol' ),
 			'icon'     => 'dashicons-admin-plugins',
 			'priority' => 25
 		)
 	);
 
 	// Register the user group.
-	members_register_cap_group( 'user',
+	memberscontrol_register_cap_group( 'user',
 		array(
-			'label'    => esc_html__( 'Users', 'members' ),
+			'label'    => esc_html__( 'Users', 'memberscontrol' ),
 			'icon'     => 'dashicons-admin-users',
 			'priority' => 30
 		)
 	);
 
 	// Register the custom group.
-	members_register_cap_group( 'custom',
+	memberscontrol_register_cap_group( 'custom',
 		array(
-			'label'      => esc_html__( 'Custom', 'members' ),
-			'caps'       => members_get_capabilities(),
+			'label'      => esc_html__( 'Custom', 'memberscontrol' ),
+			'caps'       => memberscontrol_get_capabilities(),
 			'icon'       => 'dashicons-admin-generic',
 			'diff_added' => true,
 			'priority'   => 995
@@ -138,89 +123,56 @@ function members_register_default_cap_groups() {
 
 /**
  * Returns the instance of cap group registry.
- *
- * @since  2.0.0
- * @access public
- * @return object
  */
-function members_cap_group_registry() {
+function memberscontrol_cap_group_registry() {
 
-	return \Members\Registry::get_instance( 'cap_group' );
+	return \MembersControl\Registry::get_instance( 'cap_group' );
 }
 
 /**
  * Function for registering a cap group.
- *
- * @since  1.0.0
- * @access public
- * @param  string  $name
- * @param  array   $args
- * @return void
  */
-function members_register_cap_group( $name, $args = array() ) {
+function memberscontrol_register_cap_group( $name, $args = array() ) {
 
-	members_cap_group_registry()->register( $name, new \Members\Cap_Group( $name, $args ) );
+	memberscontrol_cap_group_registry()->register( $name, new \MembersControl\Cap_Group( $name, $args ) );
 }
 
 /**
  * Unregisters a group.
- *
- * @since  1.0.0
- * @access public
- * @param  string  $name
- * @return void
  */
-function members_unregister_cap_group( $name ) {
+function memberscontrol_unregister_cap_group( $name ) {
 
-	members_cap_group_registry()->unregister( $name );
+	memberscontrol_cap_group_registry()->unregister( $name );
 }
 
 /**
  * Checks if a group exists.
- *
- * @since  1.0.0
- * @access public
- * @param  string  $name
- * @return bool
  */
-function members_cap_group_exists( $name ) {
+function memberscontrol_cap_group_exists( $name ) {
 
-	return members_cap_group_registry()->exists( $name );
+	return memberscontrol_cap_group_registry()->exists( $name );
 }
 
 /**
  * Returns an array of registered group objects.
- *
- * @since  1.0.0
- * @access public
- * @return array
  */
-function members_get_cap_groups() {
+function memberscontrol_get_cap_groups() {
 
-	return members_cap_group_registry()->get_collection();
+	return memberscontrol_cap_group_registry()->get_collection();
 }
 
 /**
  * Returns a group object if it exists.  Otherwise, `FALSE`.
- *
- * @since  1.0.0
- * @access public
- * @param  string      $name
- * @return object|bool
  */
-function members_get_cap_group( $name ) {
+function memberscontrol_get_cap_group( $name ) {
 
-	return members_cap_group_registry()->get( $name );
+	return memberscontrol_cap_group_registry()->get( $name );
 }
 
 /**
  * Returns the caps for a specific post type capability group.
- *
- * @since  1.0.0
- * @access public
- * @return array
  */
-function members_get_post_type_group_caps( $post_type = 'post' ) {
+function memberscontrol_get_post_type_group_caps( $post_type = 'post' ) {
 
 	// Get the post type caps.
 	$caps = (array) get_post_type_object( $post_type )->cap;
@@ -248,7 +200,7 @@ function members_get_post_type_group_caps( $post_type = 'post' ) {
 	if ( 'attachment' === $post_type )
 		$caps[] = 'unfiltered_upload';
 
-	$registered_caps = array_keys( wp_list_filter( members_get_caps(), array( 'group' => "type-{$post_type}" ) ) );
+	$registered_caps = array_keys( wp_list_filter( memberscontrol_get_caps(), array( 'group' => "type-{$post_type}" ) ) );
 
 	if ( $registered_caps )
 		array_merge( $caps, $registered_caps );
@@ -259,12 +211,8 @@ function members_get_post_type_group_caps( $post_type = 'post' ) {
 
 /**
  * Returns the caps for the taxonomy capability group.
- *
- * @since  1.0.0
- * @access public
- * @return array
  */
-function members_get_taxonomy_group_caps() {
+function memberscontrol_get_taxonomy_group_caps() {
 
 	$do_not_add = array(
 		'assign_categories',
@@ -283,7 +231,7 @@ function members_get_taxonomy_group_caps() {
 	foreach ( $taxi as $tax )
 		$caps = array_merge( $caps, array_values( (array) $tax->cap ) );
 
-	$registered_caps = array_keys( wp_list_filter( members_get_caps(), array( 'group' => 'taxonomy' ) ) );
+	$registered_caps = array_keys( wp_list_filter( memberscontrol_get_caps(), array( 'group' => 'taxonomy' ) ) );
 
 	if ( $registered_caps )
 		array_merge( $caps, $registered_caps );
@@ -293,16 +241,12 @@ function members_get_taxonomy_group_caps() {
 
 /**
  * Returns the caps for the custom capability group.
- *
- * @since  1.0.0
- * @access public
- * @return array
  */
-function members_get_custom_group_caps() {
+function memberscontrol_get_custom_group_caps() {
 
-	$caps = members_get_capabilities();
+	$caps = memberscontrol_get_capabilities();
 
-	$registered_caps = array_keys( wp_list_filter( members_get_caps(), array( 'group' => 'custom' ) ) );
+	$registered_caps = array_keys( wp_list_filter( memberscontrol_get_caps(), array( 'group' => 'custom' ) ) );
 
 	if ( $registered_caps )
 		array_merge( $caps, $registered_caps );

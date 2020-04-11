@@ -1,84 +1,59 @@
 <?php
 /**
  * General admin functionality.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
 # Register scripts/styles.
-add_action( 'admin_enqueue_scripts', 'members_admin_register_scripts', 0 );
-add_action( 'admin_enqueue_scripts', 'members_admin_register_styles',  0 );
+add_action( 'admin_enqueue_scripts', 'memberscontrol_admin_register_scripts', 0 );
+add_action( 'admin_enqueue_scripts', 'memberscontrol_admin_register_styles',  0 );
 
 /**
  * Get an Underscore JS template.
- *
- * @since  1.0.0
- * @access public
- * @param  string  $name
- * @return bool
  */
-function members_get_underscore_template( $name ) {
-	require_once( members_plugin()->dir . "admin/tmpl/{$name}.php" );
+function memberscontrol_get_underscore_template( $name ) {
+	require_once( memberscontrol_plugin()->dir . "admin/tmpl/{$name}.php" );
 }
 
 /**
  * Registers custom plugin scripts.
- *
- * @since  1.0.0
- * @access public
- * @return void
  */
-function members_admin_register_scripts() {
+function memberscontrol_admin_register_scripts() {
 
 	$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-	wp_register_script( 'members-settings',  members_plugin()->uri . "js/settings{$min}.js",  array( 'jquery'  ), '', true );
-	wp_register_script( 'members-edit-post', members_plugin()->uri . "js/edit-post{$min}.js", array( 'jquery'  ), '', true );
-	wp_register_script( 'members-edit-role', members_plugin()->uri . "js/edit-role{$min}.js", array( 'postbox', 'wp-util' ), '', true );
+	wp_register_script( 'memberscontrol-settings',  members_plugin()->uri . "js/settings{$min}.js",  array( 'jquery'  ), '', true );
+	wp_register_script( 'memberscontrol-edit-post', members_plugin()->uri . "js/edit-post{$min}.js", array( 'jquery'  ), '', true );
+	wp_register_script( 'memberscontrol-edit-role', members_plugin()->uri . "js/edit-role{$min}.js", array( 'postbox', 'wp-util' ), '', true );
 
 	// Localize our script with some text we want to pass in.
 	$i18n = array(
-		'button_role_edit' => esc_html__( 'Edit',                'members' ),
-		'button_role_ok'   => esc_html__( 'OK',                  'members' ),
-		'label_grant_cap'  => esc_html__( 'Grant %s capability', 'members' ),
-		'label_deny_cap'   => esc_html__( 'Deny %s capability',  'members' ),
-		'ays_delete_role'  => esc_html__( 'Are you sure you want to delete this role? This is a permanent action and cannot be undone.', 'members' ),
-		'hidden_caps'      => members_get_hidden_caps()
+		'button_role_edit' => esc_html__( 'Edit',                'memberscontrol' ),
+		'button_role_ok'   => esc_html__( 'OK',                  'memberscontrol' ),
+		'label_grant_cap'  => esc_html__( 'Grant %s capability', 'memberscontrol' ),
+		'label_deny_cap'   => esc_html__( 'Deny %s capability',  'memberscontrol' ),
+		'ays_delete_role'  => esc_html__( 'Are you sure you want to delete this role? This is a permanent action and cannot be undone.', 'memberscontrol' ),
+		'hidden_caps'      => memberscontrol_get_hidden_caps()
 	);
 
-	wp_localize_script( 'members-edit-role', 'members_i18n', $i18n );
+	wp_localize_script( 'memberscontrol-edit-role', 'memberscontrol_i18n', $i18n );
 }
 
 /**
  * Registers custom plugin scripts.
- *
- * @since  1.0.0
- * @access public
- * @return void
  */
-function members_admin_register_styles() {
+function memberscontrol_admin_register_styles() {
 
 	$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-	wp_register_style( 'members-admin', members_plugin()->uri . "css/admin{$min}.css" );
+	wp_register_style( 'memberscontrol-admin', members_plugin()->uri . "css/admin{$min}.css" );
 }
 
 /**
  * Function for safely deleting a role and transferring the deleted role's users to the default
  * role.  Note that this function can be extremely intensive.  Whenever a role is deleted, it's
  * best for the site admin to assign the user's of the role to a different role beforehand.
- *
- * @since  0.2.0
- * @access public
- * @param  string  $role
- * @return void
  */
-function members_delete_role( $role ) {
+function memberscontrol_delete_role( $role ) {
 
 	// Get the default role.
 	$default_role = get_option( 'default_role' );
@@ -110,32 +85,25 @@ function members_delete_role( $role ) {
 	remove_role( $role );
 
 	// Remove the role from the role factory.
-	members_unregister_role( $role );
+	memberscontrol_unregister_role( $role );
 }
 
 /**
  * Returns an array of all the user meta keys in the $wpdb->usermeta table.
- *
- * @since  0.2.0
- * @access public
- * @global object  $wpdb
- * @return array
  */
-function members_get_user_meta_keys() {
+function memberscontrol_get_user_meta_keys() {
 	global $wpdb;
 
 	return $wpdb->get_col( "SELECT meta_key FROM $wpdb->usermeta GROUP BY meta_key ORDER BY meta_key" );
 }
 
-add_action( 'admin_enqueue_scripts', 'members_add_pointers' );
+add_action( 'admin_enqueue_scripts', 'memberscontrol_add_pointers' );
 /**
  * Adds helper pointers to the admin
- *
- * @return void
  */
-function members_add_pointers() {
+function memberscontrol_add_pointers() {
 
-	$pointers = apply_filters( 'members_admin_pointers', array() );
+	$pointers = apply_filters( 'memberscontrol_admin_pointers', array() );
 
 	if ( empty( $pointers ) ) {
 		return;
@@ -163,31 +131,22 @@ function members_add_pointers() {
 	}
  
 	wp_enqueue_style( 'wp-pointer' );
-	wp_enqueue_script( 'members-pointers', members_plugin()->uri . '/js/members-pointers.min.js', array( 'wp-pointer' ) );
-	wp_localize_script( 'members-pointers', 'membersPointers', $valid_pointers );
+	wp_enqueue_script( 'memberscontrol-pointers', memberscontrol_plugin()->uri . '/js/memberscontrol-pointers.min.js', array( 'wp-pointer' ) );
+	wp_localize_script( 'memberscontrol-pointers', 'memberscontrolPointers', $valid_pointers );
 }
 
-add_filter( 'members_admin_pointers', 'members_3_helper_pointer' );
-/**
- * Adds a pointer for the Members 3.0 release
- *
- * @param  array 	$pointers 		Pointers
- *
- * @return array
- */
-function members_3_helper_pointer( $pointers ) {
+add_filter( 'memberscontrol_admin_pointers', 'memberscontrol_fork_helper_pointer' );
+
+function memberscontrol_fork_helper_pointer( $pointers ) {
 	ob_start();
 	?>
-	<h3><?php _e( 'Welcome to Members 3.0!', 'members' ); ?></h3>
-	<p><?php _e( 'The new Members is here to deliver an easier experience and more advanced features.', 'members' ); ?></p>
-	<p><?php _e( 'Don\'t worry, it will work the same as it always has for you!  We\'ve just made the following changes:', 'members' ); ?></p>
-	<p><?php _e( '<strong>1.</strong> We\'ve centralized all of the main Members settings here. This will make things much easier to find and use.', 'members' ); ?></p>
-	<p><?php _e( '<strong>2.</strong> All of our Add-ons are now <strong>freely</strong> included in Members! Just visit the Add-ons menu item here to start using these premium features.', 'members' ); ?></p>
-	<p><?php _e( 'We\'re excited about these new changes and we hope they\'ll make your experience with Members even better!', 'members' ); ?></p>
-	<p><?php _e( '- The MemberPress team', 'members' ); ?></p>
+	<h3><?php _e( 'Welcome to MembersControl 1.0!', 'memberscontrol' ); ?></h3>
+	<p><?php _e( 'This plug is a fork of the incredible Members plugin by Justin Tadlock.', 'memberscontrol' ); ?></p>
+	<p><?php _e( 'At the end of 2019, Justin sold the plugin to the MemberPress team, and they added upsells.', 'memberscontrol' ); ?></p>
+	<p><?php _e( 'This fork removes all upsells and restores Justin\'s plugin to its proper functionality.', 'memberscontrol' ); ?></p>
 	<?php
 	$content = ob_get_clean();
-    $pointers['members_30'] = array(
+    $pointers['members_fork'] = array(
         'target' => '#toplevel_page_members',
         'options' => array(
             'content' => $content,

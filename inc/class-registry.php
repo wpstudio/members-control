@@ -1,75 +1,28 @@
 <?php
 /**
  * Registry class for storing collections of data.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-namespace Members;
+namespace MembersControl;
 
 /**
  * Base registry class.
- *
- * @since  2.0.0
- * @access public
  */
 class Registry {
 
-	/**
-	 * Registry instances.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @var    array
-	 */
 	private static $instances = array();
 
-	/**
-	 * Array of items in the collection.
-	 *
-	 * @since  2.0.0
-	 * @access protected
-	 * @var    array
-	 */
 	protected $collection = array();
 
-	/**
-	 * Constructor method.
-	 *
-	 * @since  2.0.0
-	 * @access protected
-	 * @return void
-	 */
 	protected function __construct() {}
 
-	/**
-	 * Lock down `__clone()`.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @return void
-	 */
 	private function __clone() {}
 
-	/**
-	 * Lock down `__wakeup()`.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @return void
-	 */
 	private function __wakeup() {}
 
 	/**
 	 * Register an item.
 	 *
-	 * @since  2.0.0
-	 * @access public
 	 * @param  string  $name
 	 * @param  mixed   $value
 	 * @return void
@@ -83,8 +36,6 @@ class Registry {
 	/**
 	 * Unregisters an item.
 	 *
-	 * @since  2.0.0
-	 * @access public
 	 * @param  string  $name
 	 * @return void
 	 */
@@ -97,8 +48,6 @@ class Registry {
 	/**
 	 * Checks if an item exists.
 	 *
-	 * @since  2.0.0
-	 * @access public
 	 * @param  string  $name
 	 * @return bool
 	 */
@@ -110,8 +59,6 @@ class Registry {
 	/**
 	 * Returns an item.
 	 *
-	 * @since  2.0.0
-	 * @access public
 	 * @param  string  $name
 	 * @return mixed
 	 */
@@ -122,10 +69,6 @@ class Registry {
 
 	/**
 	 * Returns the entire collection.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return array
 	 */
 	public function get_collection() {
 
@@ -134,10 +77,6 @@ class Registry {
 
 	/**
 	 * Returns the instance.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return object
 	 */
 	final public static function get_instance( $name = '' ) {
 

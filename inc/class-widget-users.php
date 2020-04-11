@@ -1,62 +1,38 @@
 <?php
 /**
  * Creates a widget that allows users to list users of their site.
- *
- * @package    Members
- * @subpackage Includes
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
-namespace Members;
+namespace MembersControl;
 
 /**
  * Users widget archive class.
- *
- * @since  2.0.0
- * @access public
  */
 class Widget_Users extends \WP_Widget {
 
-	/**
-	 * Default arguments for the widget settings.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @var    array
-	 */
 	public $defaults = array();
 
-	/**
-	 * Set up the widget's unique name, ID, class, description, and other options.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function __construct() {
 
 		// Set up the widget options.
 		$widget_options = array(
 			'classname'   => 'users',
-			'description' => esc_html__( 'Provides the ability to list the users of the site.', 'members' )
+			'description' => esc_html__( 'Provides the ability to list the users of the site.', 'memberscontrol' )
 		);
 
 		// Set up the widget control options.
 		$control_options = array(
 			'width'   => 525,
 			'height'  => 350,
-			'id_base' => 'members-widget-users'
+			'id_base' => 'memberscontrol-widget-users'
 		);
 
 		// Create the widget.
-		parent::__construct( 'members-widget-users', esc_html__( 'Members: Users', 'members' ), $widget_options, $control_options );
+		parent::__construct( 'memberscontrol-widget-users', esc_html__( 'MembersControl: Users', 'memberscontrol' ), $widget_options, $control_options );
 
 		// Set up the defaults.
 		$this->defaults = array(
-			'title'      => esc_attr__( 'Users', 'members' ),
+			'title'      => esc_attr__( 'Users', 'memberscontrol' ),
 			'order'      => 'ASC',
 			'orderby'    => 'login',
 			'role'       => '',
@@ -72,9 +48,6 @@ class Widget_Users extends \WP_Widget {
 
 	/**
 	 * Outputs the widget based on the arguments input through the widget controls.
-	 *
-	 * @since  2.0.0
-	 * @access public
 	 * @param  array  $sidebar
 	 * @param  array  $instance
 	 * @return void
@@ -137,12 +110,6 @@ class Widget_Users extends \WP_Widget {
 
 	/**
 	 * Sanitizes/Validates widget options before being saved.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  array   $new_instance
-	 * @param  array   $old_instance
-	 * @return array
 	 */
 	function update( $new_instance, $old_instance ) {
 
@@ -170,11 +137,6 @@ class Widget_Users extends \WP_Widget {
 
 	/**
 	 * Displays the widget control options in the Widgets admin screen.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  array  $instance
-	 * @return void
 	 */
 	function form( $instance ) {
 
@@ -182,34 +144,34 @@ class Widget_Users extends \WP_Widget {
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
 		$order = array(
-			'ASC'  => esc_attr__( 'Ascending',  'members' ),
-			'DESC' => esc_attr__( 'Descending', 'members' )
+			'ASC'  => esc_attr__( 'Ascending',  'memberscontrol' ),
+			'DESC' => esc_attr__( 'Descending', 'memberscontrol' )
 		);
 
 		$orderby = array(
-			'display_name' => esc_attr__( 'Display Name', 'members' ),
-			'email'        => esc_attr__( 'Email',        'members' ),
-			'ID'           => esc_attr__( 'ID',           'members' ),
-			'nicename'     => esc_attr__( 'Nice Name',    'members' ),
-			'post_count'   => esc_attr__( 'Post Count',   'members' ),
-			'registered'   => esc_attr__( 'Registered',   'members' ),
-			'url'          => esc_attr__( 'URL',          'members' ),
-			'user_login'   => esc_attr__( 'Login',        'members' )
+			'display_name' => esc_attr__( 'Display Name', 'memberscontrol' ),
+			'email'        => esc_attr__( 'Email',        'memberscontrol' ),
+			'ID'           => esc_attr__( 'ID',           'memberscontrol' ),
+			'nicename'     => esc_attr__( 'Nice Name',    'memberscontrol' ),
+			'post_count'   => esc_attr__( 'Post Count',   'memberscontrol' ),
+			'registered'   => esc_attr__( 'Registered',   'memberscontrol' ),
+			'url'          => esc_attr__( 'URL',          'memberscontrol' ),
+			'user_login'   => esc_attr__( 'Login',        'memberscontrol' )
 		);
 
-		$meta_key = array_merge( array( '' ), (array) members_get_user_meta_keys() );
+		$meta_key = array_merge( array( '' ), (array) memberscontrol_get_user_meta_keys() );
 
-		$roles = members_get_roles();
+		$roles = memberscontrol_get_roles();
 		asort( $roles ); ?>
 
 		<div style="float: left;width: 48%;">
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'memberscontrol' ); ?></label>
 			<input type="text" class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'orderby' ); ?>"><?php esc_html_e( 'Order By:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'orderby' ); ?>"><?php esc_html_e( 'Order By:', 'memberscontrol' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'orderby' ); ?>" name="<?php echo $this->get_field_name( 'orderby' ); ?>">
 				<?php foreach ( $orderby as $option_value => $option_label ) : ?>
 					<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( $instance['orderby'], $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
@@ -217,7 +179,7 @@ class Widget_Users extends \WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'order' ); ?>"><?php esc_html_e( 'Order:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'order' ); ?>"><?php esc_html_e( 'Order:', 'memberscontrol' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'order' ); ?>" name="<?php echo $this->get_field_name( 'order' ); ?>">
 				<?php foreach ( $order as $option_value => $option_label ) : ?>
 					<option value="<?php echo esc_attr( $option_value ); ?>" <?php selected( $instance['order'], $option_value ); ?>><?php echo esc_html( $option_label ); ?></option>
@@ -225,7 +187,7 @@ class Widget_Users extends \WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'role' ); ?>"><?php esc_html_e( 'Role:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'role' ); ?>"><?php esc_html_e( 'Role:', 'memberscontrol' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'role' ); ?>" name="<?php echo $this->get_field_name( 'role' ); ?>">
 				<option value="" <?php selected( $instance['role'], '' ); ?>></option>
 				<?php foreach ( $roles as $name => $role ) : ?>
@@ -234,11 +196,11 @@ class Widget_Users extends \WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Limit:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Limit:', 'memberscontrol' ); ?></label>
 			<input type="number" min="0" class="widefat code" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo esc_attr( $instance['number'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'offset' ); ?>"><?php esc_html_e( 'Offset:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'offset' ); ?>"><?php esc_html_e( 'Offset:', 'memberscontrol' ); ?></label>
 			<input type="number" min="1" class="widefat code" id="<?php echo $this->get_field_id( 'offset' ); ?>" name="<?php echo $this->get_field_name( 'offset' ); ?>" value="<?php echo esc_attr( $instance['offset'] ); ?>" />
 		</p>
 
@@ -246,19 +208,19 @@ class Widget_Users extends \WP_Widget {
 		<div style="float: right; width: 48%;">
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'include' ); ?>"><?php esc_html_e( 'Include:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'include' ); ?>"><?php esc_html_e( 'Include:', 'memberscontrol' ); ?></label>
 			<input type="text" class="widefat code" id="<?php echo $this->get_field_id( 'include' ); ?>" name="<?php echo $this->get_field_name( 'include' ); ?>" value="<?php echo esc_attr( $instance['include'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'exclude' ); ?>"><?php esc_html_e( 'Exclude:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'exclude' ); ?>"><?php esc_html_e( 'Exclude:', 'memberscontrol' ); ?></label>
 			<input type="text" class="widefat code" id="<?php echo $this->get_field_id( 'exclude' ); ?>" name="<?php echo $this->get_field_name( 'exclude' ); ?>" value="<?php echo esc_attr( $instance['exclude'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'search' ); ?>"><?php esc_html_e( 'Search:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'search' ); ?>"><?php esc_html_e( 'Search:', 'memberscontrol' ); ?></label>
 			<input type="text" class="widefat code" id="<?php echo $this->get_field_id( 'search' ); ?>" name="<?php echo $this->get_field_name( 'search' ); ?>" value="<?php echo esc_attr( $instance['search'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'meta_key' ); ?>"><?php esc_html_e( 'Meta Key:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'meta_key' ); ?>"><?php esc_html_e( 'Meta Key:', 'memberscontrol' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'meta_key' ); ?>" name="<?php echo $this->get_field_name( 'meta_key' ); ?>">
 				<?php foreach ( $meta_key as $meta ) { ?>
 					<option value="<?php echo esc_attr( $meta ); ?>" <?php selected( $instance['meta_key'], $meta ); ?>><?php echo esc_html( $meta ); ?></option>
@@ -266,7 +228,7 @@ class Widget_Users extends \WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'meta_value' ); ?>"><?php esc_html_e( 'Meta Value:', 'members' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'meta_value' ); ?>"><?php esc_html_e( 'Meta Value:', 'memberscontrol' ); ?></label>
 			<input type="text" class="widefat code" id="<?php echo $this->get_field_id( 'meta_value' ); ?>" name="<?php echo $this->get_field_name( 'meta_value' ); ?>" value="<?php echo esc_attr( $instance['meta_value'] ); ?>" />
 		</p>
 

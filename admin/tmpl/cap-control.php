@@ -1,16 +1,9 @@
 <?php
 /**
  * Underscore JS template for edit capabilities tab section controls.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 ?>
-<tr class="members-cap-checklist">
+<tr class="memberscontrol-cap-checklist">
 	<td class="column-cap">
 		<button type="button"><strong>{{ data.label.cap }}</strong></button>
 		<i class="dashicons <?php echo is_rtl() ? 'dashicons-arrow-left' : 'dashicons-arrow-right'; ?>"></i>

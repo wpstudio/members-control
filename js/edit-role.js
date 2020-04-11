@@ -3,9 +3,9 @@ jQuery( document ).ready( function() {
 	/* ====== Delete Role Link (on Roles and Edit Role screens) ====== */
 
 	// When the delete role link is clicked, give a "AYS?" popup to confirm.
-	jQuery( '.members-delete-role-link' ).click(
+	jQuery( '.memberscontrol-delete-role-link' ).click(
 		function() {
-			return window.confirm( members_i18n.ays_delete_role );
+			return window.confirm( memberscontrol_i18n.ays_delete_role );
 		}
 	);
 
@@ -20,7 +20,7 @@ jQuery( document ).ready( function() {
 	 * @param  string  $slug
 	 * @return void
 	 */
-	function members_print_role_slug( slug ) {
+	function memberscontrol_print_role_slug( slug ) {
 
 		// Sanitize the role.
 		slug = slug.toLowerCase().trim().replace( /<.*?>/g, '' ).replace( /\s/g, '_' ).replace( /[^a-zA-Z0-9_]/g, '' );
@@ -36,7 +36,7 @@ jQuery( document ).ready( function() {
 			// If there's no value stored in the role input box, print this input's
 			// value in the role slug span.
 			if ( ! jQuery( 'input[name="role"]' ).val() )
-				members_print_role_slug( this.value );
+				memberscontrol_print_role_slug( this.value );
 		}
 	); // .keyup
 
@@ -48,7 +48,7 @@ jQuery( document ).ready( function() {
 		function() {
 
 			// Toggle the button class and change the text.
-			jQuery( this ).removeClass( 'closed' ).addClass( 'open' ).text( members_i18n.button_role_ok );
+			jQuery( this ).removeClass( 'closed' ).addClass( 'open' ).text( memberscontrol_i18n.button_role_ok );
 
 			// Show role input.
 			jQuery( 'input[name="role"]' ).show();
@@ -66,7 +66,7 @@ jQuery( document ).ready( function() {
 		function() {
 
 			// Toggle the button class and change the text.
-			jQuery( this ).removeClass( 'open' ).addClass( 'closed' ).text( members_i18n.button_role_edit );
+			jQuery( this ).removeClass( 'open' ).addClass( 'closed' ).text( memberscontrol_i18n.button_role_edit );
 
 			// Hide role input.
 			jQuery( 'input[name="role"]' ).hide();
@@ -76,11 +76,11 @@ jQuery( document ).ready( function() {
 
 			// If we have a value, print the slug.
 			if ( role )
-				members_print_role_slug( role );
+				memberscontrol_print_role_slug( role );
 
 			// Else, use the role name input value.
 			else
-				members_print_role_slug( jQuery( 'input[name="role_name"]' ).val() );
+				memberscontrol_print_role_slug( jQuery( 'input[name="role_name"]' ).val() );
 		}
 	); // .click()
 
@@ -122,40 +122,40 @@ jQuery( document ).ready( function() {
 	/* ====== Tab Sections and Controls ====== */
 
 	// Create Underscore templates.
-	var section_template = wp.template( 'members-cap-section' );
-	var control_template = wp.template( 'members-cap-control' );
+	var section_template = wp.template( 'memberscontrol-cap-section' );
+	var control_template = wp.template( 'memberscontrol-cap-control' );
 
-	// Check that the `members_sections` and `members_controls` variables were
+	// Check that the `memberscontrol_sections` and `memberscontrol_controls` variables were
 	// passed in via `wp_localize_script()`.
-	if ( typeof members_sections !== 'undefined' && typeof members_controls !== 'undefined' ) {
+	if ( typeof memberscontrol_sections !== 'undefined' && typeof memberscontrol_controls !== 'undefined' ) {
 
 		// Loop through the sections and append the template for each.
-		_.each( members_sections, function( data ) {
-			jQuery( '.members-tab-wrap' ).append( section_template( data ) );
+		_.each( memberscontrol_sections, function( data ) {
+			jQuery( '.memberscontrol-tab-wrap' ).append( section_template( data ) );
 		} );
 
 		// Loop through the controls and append the template for each.
-		_.each( members_controls, function( data ) {
-			jQuery( '#members-tab-' + data.section + ' tbody' ).append( control_template( data ) );
+		_.each( memberscontrol_controls, function( data ) {
+			jQuery( '#memberscontrol-tab-' + data.section + ' tbody' ).append( control_template( data ) );
 		} );
 	}
 
 	/* ====== Tabs ====== */
 
 	// Hides the tab content.
-	jQuery( '.members-cap-tabs .members-tab-content' ).hide();
+	jQuery( '.memberscontrol-cap-tabs .memberscontrol-tab-content' ).hide();
 
 	// Shows the first tab's content.
-	jQuery( '.members-cap-tabs .members-tab-content:first-child' ).show();
+	jQuery( '.memberscontrol-cap-tabs .memberscontrol-tab-content:first-child' ).show();
 
 	// Makes the 'aria-selected' attribute true for the first tab nav item.
-	jQuery( '.members-tab-nav :first-child' ).attr( 'aria-selected', 'true' );
+	jQuery( '.memberscontrol-tab-nav :first-child' ).attr( 'aria-selected', 'true' );
 
 	// Copies the current tab item title to the box header.
-	jQuery( '.members-which-tab' ).text( jQuery( '.members-tab-nav :first-child a' ).text() );
+	jQuery( '.memberscontrol-which-tab' ).text( jQuery( '.memberscontrol-tab-nav :first-child a' ).text() );
 
 	// When a tab nav item is clicked.
-	jQuery( '.members-tab-nav li a' ).click(
+	jQuery( '.memberscontrol-tab-nav li a' ).click(
 		function( j ) {
 
 			// Prevent the default browser action when a link is clicked.
@@ -165,19 +165,19 @@ jQuery( document ).ready( function() {
 			var href = jQuery( this ).attr( 'href' );
 
 			// Hide all tab content.
-			jQuery( this ).parents( '.members-cap-tabs' ).find( '.members-tab-content' ).hide();
+			jQuery( this ).parents( '.memberscontrol-cap-tabs' ).find( '.memberscontrol-tab-content' ).hide();
 
 			// Find the tab content that matches the tab nav item and show it.
-			jQuery( this ).parents( '.members-cap-tabs' ).find( href ).show();
+			jQuery( this ).parents( '.memberscontrol-cap-tabs' ).find( href ).show();
 
 			// Set the `aria-selected` attribute to false for all tab nav items.
-			jQuery( this ).parents( '.members-cap-tabs' ).find( '.members-tab-title' ).attr( 'aria-selected', 'false' );
+			jQuery( this ).parents( '.memberscontrol-cap-tabs' ).find( '.memberscontrol-tab-title' ).attr( 'aria-selected', 'false' );
 
 			// Set the `aria-selected` attribute to true for this tab nav item.
 			jQuery( this ).parent().attr( 'aria-selected', 'true' );
 
 			// Copy the current tab item title to the box header.
-			jQuery( '.members-which-tab' ).text( jQuery( this ).text() );
+			jQuery( '.memberscontrol-which-tab' ).text( jQuery( this ).text() );
 		}
 	); // click()
 
@@ -191,15 +191,15 @@ jQuery( document ).ready( function() {
 	 * @access public
 	 * @return void
 	 */
-	function members_count_caps() {
+	function memberscontrol_count_caps() {
 
 		// Count the granted and denied caps that are checked.
-		var granted_count = jQuery( "#members-tab-all input[data-grant-cap]:checked" ).length;
-		var denied_count  = jQuery( "#members-tab-all input[data-deny-cap]:checked" ).length;
+		var granted_count = jQuery( "#memberscontrol-tab-all input[data-grant-cap]:checked" ).length;
+		var denied_count  = jQuery( "#memberscontrol-tab-all input[data-deny-cap]:checked" ).length;
 
 		// Count the new (added from new cap meta box) granted and denied caps that are checked.
-		var new_granted_count = jQuery( '#members-tab-custom input[name="grant-new-caps[]"]:checked' ).length;
-		var new_denied_count  = jQuery( '#members-tab-custom input[name="deny-new-caps[]"]:checked' ).length;
+		var new_granted_count = jQuery( '#memberscontrol-tab-custom input[name="grant-new-caps[]"]:checked' ).length;
+		var new_denied_count  = jQuery( '#memberscontrol-tab-custom input[name="deny-new-caps[]"]:checked' ).length;
 
 		// Update the submit meta box cap count.
 		jQuery( '#submitdiv .granted-count' ).text( granted_count + new_granted_count );
@@ -215,7 +215,7 @@ jQuery( document ).ready( function() {
 	 * @param  object  $checkbox
 	 * @return void
 	 */
-	function members_check_uncheck( checkbox ) {
+	function memberscontrol_check_uncheck( checkbox ) {
 
 		var type     = 'grant';
 		var opposite = 'deny';
@@ -248,19 +248,19 @@ jQuery( document ).ready( function() {
 	}
 
 	// Count the granted and denied caps that are checked.
-	members_count_caps();
+	memberscontrol_count_caps();
 
 	// When a change is triggered for any grant/deny checkbox. Note that we're using `.on()`
 	// here because we're dealing with dynamically-generated HTML.
 	jQuery( document ).on( 'change',
-		'.members-cap-checklist input[data-grant-cap], .members-cap-checklist input[data-deny-cap]',
+		'.memberscontrol-cap-checklist input[data-grant-cap], .memberscontrol-cap-checklist input[data-deny-cap]',
 		function() {
 
 			// Check/Uncheck boxes.
-			members_check_uncheck( this );
+			memberscontrol_check_uncheck( this );
 
 			// Count the granted and denied caps that are checked.
-			members_count_caps();
+			memberscontrol_count_caps();
 		}
 	); // .on( 'change' )
 
@@ -268,11 +268,11 @@ jQuery( document ).ready( function() {
 	// with dynamically-generated HTML.
 	//
 	// Note that we only need to trigger `change()` once for our functionality.
-	jQuery( document ).on( 'click', '.editable-role .members-cap-checklist button',
+	jQuery( document ).on( 'click', '.editable-role .memberscontrol-cap-checklist button',
 		function() {
 
 			// Get the button parent element.
-			var parent = jQuery( this ).closest( '.members-cap-checklist' );
+			var parent = jQuery( this ).closest( '.memberscontrol-cap-checklist' );
 
 			// Find the grant and deny checkbox inputs.
 			var grant = jQuery( parent ).find( 'input[data-grant-cap]' );
@@ -299,9 +299,9 @@ jQuery( document ).ready( function() {
 	); // on()
 
 	// Remove focus from button when hovering another button.
-	jQuery( document ).on( 'hover', '.editable-role .members-cap-checklist button',
+	jQuery( document ).on( 'hover', '.editable-role .memberscontrol-cap-checklist button',
 		function() {
-			jQuery( '.members-cap-checklist button:focus' ).not( this ).blur();
+			jQuery( '.memberscontrol-cap-checklist button:focus' ).not( this ).blur();
 		}
 	);
 
@@ -318,32 +318,32 @@ jQuery( document ).ready( function() {
 	jQuery( '#newcapdiv button.handlediv' ).attr( 'type', 'button' );
 
 	// Disable the new cap button so that it's not clicked until there's a cap.
-	jQuery( '#members-add-new-cap' ).prop( 'disabled', true );
+	jQuery( '#memberscontrol-add-new-cap' ).prop( 'disabled', true );
 
 	// When the user starts typing a new cap.
-	jQuery( '#members-new-cap-field' ).on( 'input',
+	jQuery( '#memberscontrol-new-cap-field' ).on( 'input',
 		function() {
 
 			// If there's a value in the input, enable the add new button.
 			//if ( 'do_not_allow' !== jQuery( this ).val() ) {
-			if ( -1 === jQuery.inArray( jQuery( this ).val(), members_i18n.hidden_caps ) ) {
+			if ( -1 === jQuery.inArray( jQuery( this ).val(), memberscontrol_i18n.hidden_caps ) ) {
 
-				jQuery( '#members-add-new-cap' ).prop( 'disabled', false );
+				jQuery( '#memberscontrol-add-new-cap' ).prop( 'disabled', false );
 
 			// If there's no value, disable the button.
 			} else {
-				jQuery( '#members-add-new-cap' ).prop( 'disabled', true );
+				jQuery( '#memberscontrol-add-new-cap' ).prop( 'disabled', true );
 			}
 		}
 	); // .on( 'input' )
 
 	// Simulate clicking the add new cap button if the user presses "Enter" in the new cap field.
-	jQuery( '#members-new-cap-field' ).keypress(
+	jQuery( '#memberscontrol-new-cap-field' ).keypress(
 		function( e ) {
 
 			// 13 is the key code for "Enter".
 			if ( 13 === e.keyCode ) {
-				jQuery( '#members-add-new-cap' ).click();
+				jQuery( '#memberscontrol-add-new-cap' ).click();
 				e.preventDefault();
 				return false;
 			}
@@ -351,11 +351,11 @@ jQuery( document ).ready( function() {
 	); // .keypress()
 
 	// When the new cap button is clicked.
-	jQuery( '#members-add-new-cap' ).click(
+	jQuery( '#memberscontrol-add-new-cap' ).click(
 		function() {
 
 			// Get the new cap value.
-			var new_cap = jQuery( '#members-new-cap-field' ).val();
+			var new_cap = jQuery( '#memberscontrol-new-cap-field' ).val();
 
 			// Sanitize the new cap.
 			// Note that this will be sanitized on the PHP side as well before save.
@@ -366,16 +366,16 @@ jQuery( document ).ready( function() {
 
 				// Don't allow the 'do_not_allow' cap.
 				//if ( 'do_not_allow' === new_cap ) {
-				if ( -1 !== jQuery.inArray( jQuery( this ).val(), members_i18n.hidden_caps ) ) {
+				if ( -1 !== jQuery.inArray( jQuery( this ).val(), memberscontrol_i18n.hidden_caps ) ) {
 					return;
 				}
 
 				// Trigger a click event on the "custom" tab in the edit caps box.
-				jQuery( 'a[href="#members-tab-custom"]' ).trigger( 'click' );
+				jQuery( 'a[href="#memberscontrol-tab-custom"]' ).trigger( 'click' );
 
 				// Replace text placeholder with cap.
-				members_i18n.label_grant_cap = members_i18n.label_grant_cap.replace( /%s/g, '<code>' + new_cap + '</code>' );
-				members_i18n.label_deny_cap  = members_i18n.label_deny_cap.replace( /%s/g,  '<code>' + new_cap + '</code>' );
+				memberscontrol_i18n.label_grant_cap = memberscontrol_i18n.label_grant_cap.replace( /%s/g, '<code>' + new_cap + '</code>' );
+				memberscontrol_i18n.label_deny_cap  = memberscontrol_i18n.label_deny_cap.replace( /%s/g,  '<code>' + new_cap + '</code>' );
 
 				// Set up some data to pass to our Underscore template.
 				var data = {
@@ -384,31 +384,31 @@ jQuery( document ).ready( function() {
 					name           : { grant : 'grant-new-caps[]', deny : 'deny-new-caps[]' },
 					is_granted_cap : true,
 					is_denied_cap  : false,
-					label          : { cap : new_cap, grant : members_i18n.label_grant_cap, deny : members_i18n.label_deny_cap }
+					label          : { cap : new_cap, grant : memberscontrol_i18n.label_grant_cap, deny : memberscontrol_i18n.label_deny_cap }
 				};
 
 				// Prepend our template to the "custom" edit caps tab content.
-				jQuery( '#members-tab-custom tbody' ).prepend( control_template( data ) );
+				jQuery( '#memberscontrol-tab-custom tbody' ).prepend( control_template( data ) );
 
 				// Get the new cap table row.
-				var parent = jQuery( '[data-grant-cap="' + new_cap + '"]' ).parents( '.members-cap-checklist' );
+				var parent = jQuery( '[data-grant-cap="' + new_cap + '"]' ).parents( '.memberscontrol-cap-checklist' );
 
 				// Add the highlight class.
-				jQuery( parent ).addClass( 'members-highlight' );
+				jQuery( parent ).addClass( 'memberscontrol-highlight' );
 
 				// Remove the class after a set time for a highlight effect.
 				setTimeout( function() {
-					jQuery( parent ).removeClass( 'members-highlight' );
+					jQuery( parent ).removeClass( 'memberscontrol-highlight' );
 				}, 500 );
 
 				// Set the new cap input value to an empty string.
-				jQuery( '#members-new-cap-field' ).val( '' );
+				jQuery( '#memberscontrol-new-cap-field' ).val( '' );
 
 				// Disable the add new cap button.
-				jQuery( '#members-add-new-cap' ).prop( 'disabled', true );
+				jQuery( '#memberscontrol-add-new-cap' ).prop( 'disabled', true );
 
 				// Trigger a change on our new grant cap checkbox.
-				jQuery( '.members-cap-checklist input[data-grant-cap="' + new_cap + '"]' ).trigger( 'change' );
+				jQuery( '.memberscontrol-cap-checklist input[data-grant-cap="' + new_cap + '"]' ).trigger( 'change' );
 			}
 		}
 	); // .click()

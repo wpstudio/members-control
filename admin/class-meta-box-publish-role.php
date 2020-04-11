@@ -1,80 +1,32 @@
 <?php
 /**
  * Publish/Update role meta box.
- *
- * @package    Members
- * @subpackage Admin
- * @author     Justin Tadlock <justintadlock@gmail.com>
- * @copyright  Copyright (c) 2009 - 2018, Justin Tadlock
- * @link       https://themehybrid.com/plugins/members
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
-
-namespace Members\Admin;
+namespace MembersControl\Admin;
 
 /**
  * Class to handle the role meta box edit/new role screen.
- *
- * @since  2.0.0
- * @access public
  */
 final class Meta_Box_Publish_Role {
 
-	/**
-	 * Holds the instances of this class.
-	 *
-	 * @since  2.0.0
-	 * @access private
-	 * @var    object
-	 */
 	private static $instance;
 
-	/**
-	 * Adds our methods to the proper hooks.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	protected function __construct() {
 
-		add_action( 'members_load_role_edit', array( $this, 'load' ) );
-		add_action( 'members_load_role_new',  array( $this, 'load' ) );
+		add_action( 'memberscontrol_load_role_edit', array( $this, 'load' ) );
+		add_action( 'memberscontrol_load_role_new',  array( $this, 'load' ) );
 	}
 
-	/**
-	 * Runs on the page load hook to hook in the meta boxes.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function load() {
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 	}
 
-	/**
-	 * Adds the meta box.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  string  $screen_id
-	 * @return void
-	 */
 	public function add_meta_boxes( $screen_id ) {
 
-		add_meta_box( 'submitdiv', esc_html__( 'Role', 'members' ), array( $this, 'meta_box' ), $screen_id, 'side', 'high' );
+		add_meta_box( 'submitdiv', esc_html__( 'Role', 'memberscontrol' ), array( $this, 'meta_box' ), $screen_id, 'side', 'high' );
 	}
 
-	/**
-	 * Outputs the meta box HTML.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @param  object  $role
-	 * @return void
-	 */
 	public function meta_box( $role ) {
 
 		// Set up some defaults for new roles.
@@ -85,10 +37,10 @@ final class Meta_Box_Publish_Role {
 
 		// If we're editing a role, overwrite the defaults.
 		if ( $role ) {
-			$is_editable = members_is_role_editable( $role->name );
-			$user_count  = members_get_role_user_count( $role->name );
-			$grant_count = members_get_role_granted_cap_count( $role->name );
-			$deny_count  = members_get_role_denied_cap_count( $role->name );
+			$is_editable = memberscontrol_is_role_editable( $role->name );
+			$user_count  = memberscontrol_get_role_user_count( $role->name );
+			$grant_count = memberscontrol_get_role_granted_cap_count( $role->name );
+			$deny_count  = memberscontrol_get_role_denied_cap_count( $role->name );
 		} ?>
 
 		<div class="submitbox" id="submitpost">
@@ -101,26 +53,26 @@ final class Meta_Box_Publish_Role {
 
 						<a href="<?php echo esc_url( add_query_arg( 'role', $role->name, admin_url( 'users.php' ) ) ); ?>"><?php echo esc_html(
 							sprintf(
-								_n( '%s User', '%s Users', absint( $user_count ), 'members' ),
+								_n( '%s User', '%s Users', absint( $user_count ), 'memberscontrol' ),
 								number_format_i18n( $user_count )
 							)
 						); ?></a>
 
 					<?php else : ?>
-						<?php esc_html_e( 'Users:', 'members' ); ?>
+						<?php esc_html_e( 'Users:', 'memberscontrol' ); ?>
 						<strong class="user-count"><?php echo number_format_i18n( $user_count ); ?></strong>
 					<?php endif; ?>
 				</div>
 
 				<div class="misc-pub-section misc-pub-section-granted">
 					<i class="dashicons dashicons-yes"></i>
-					<?php esc_html_e( 'Granted:', 'members' ); ?>
+					<?php esc_html_e( 'Granted:', 'memberscontrol' ); ?>
 					<strong class="granted-count"><?php echo number_format_i18n( $grant_count ); ?></strong>
 				</div>
 
 				<div class="misc-pub-section misc-pub-section-denied">
 					<i class="dashicons dashicons-no"></i>
-					<?php esc_html_e( 'Denied:', 'members' ); ?>
+					<?php esc_html_e( 'Denied:', 'memberscontrol' ); ?>
 					<strong class="denied-count"><?php echo number_format_i18n( $deny_count ); ?></strong>
 				</div>
 
@@ -131,14 +83,14 @@ final class Meta_Box_Publish_Role {
 				<div id="delete-action">
 
 					<?php if ( $is_editable && $role ) : ?>
-						<a class="submitdelete deletion members-delete-role-link" href="<?php echo esc_url( members_get_delete_role_url( $role->name ) ); ?>"><?php echo esc_html_x( 'Delete', 'delete role', 'members' ); ?></a>
+						<a class="submitdelete deletion memberscontrol-delete-role-link" href="<?php echo esc_url( memberscontrol_get_delete_role_url( $role->name ) ); ?>"><?php echo esc_html_x( 'Delete', 'delete role', 'memberscontrol' ); ?></a>
 					<?php endif; ?>
 				</div>
 
 				<div id="publishing-action">
 
 					<?php if ( $is_editable ) : ?>
-						<?php submit_button( $role ? esc_attr__( 'Update', 'members' ) : esc_attr__( 'Add Role', 'members' ), 'primary', 'publish', false, array( 'id' => 'publish' ) ); ?>
+						<?php submit_button( $role ? esc_attr__( 'Update', 'memberscontrol' ) : esc_attr__( 'Add Role', 'memberscontrol' ), 'primary', 'publish', false, array( 'id' => 'publish' ) ); ?>
 					<?php endif; ?>
 
 				</div><!-- #publishing-action -->
@@ -152,10 +104,6 @@ final class Meta_Box_Publish_Role {
 
 	/**
 	 * Returns the instance.
-	 *
-	 * @since  2.0.0
-	 * @access public
-	 * @return object
 	 */
 	public static function get_instance() {
 
