@@ -152,7 +152,7 @@ class Role_List_Table extends \WP_List_Table {
 			$states['default'] = esc_html__( 'Default Role', 'memberscontrol' );
 
 		// If the current user has this role.
-		if ( members_current_user_has_role( $role ) )
+		if ( memberscontrol_current_user_has_role( $role ) )
 			$states['mine'] = esc_html__( 'Your Role', 'memberscontrol' );
 
 		// Allow devs to filter the role states.

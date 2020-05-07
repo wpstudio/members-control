@@ -24,7 +24,6 @@ final class Meta_Box_Content_Permissions {
 		add_action( 'load-post-new.php', array( $this, 'load' ) );
 	}
 
-	 */
 	public function load() {
 
 		// Make sure meta box is allowed for this post type.

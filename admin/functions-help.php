@@ -2,12 +2,10 @@
 /**
  * Callback functions for outputting help tabs in the admin.
  */
-
 /**
  * Help sidebar for all of the help tabs.
  */
 function memberscontrol_get_help_sidebar_text() {
-
 	// Get docs and help links.
 	$docs_link = sprintf( '<li><a href="https://github.com/wpstudio/memberscontrol/blob/master/readme.md">%s</a></li>', esc_html__( 'Documentation',  'memberscontrol' ) );
 

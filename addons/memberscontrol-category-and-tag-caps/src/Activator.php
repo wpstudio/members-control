@@ -1,32 +1,17 @@
 <?php
 /**
  * Plugin Activator.
- *
- * Runs the plugin activation routine.
- *
- * @package   MembersCategoryAndTagCaps
- * @author    Justin Tadlock <justintadlock@gmail.com>
- * @copyright 2019, Justin Tadlock
- * @link      https://themehybrid.com/plugins/members-category-and-tag-caps
- * @license   https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
  */
 
-namespace Members\CategoryAndTagCaps;
+namespace MembersControl\CategoryAndTagCaps;
 
 /**
  * Activator class.
- *
- * @since  1.0.0
- * @access public
  */
 class Activator {
 
 	/**
 	 * Runs necessary code when first activating the plugin.
-	 *
-	 * @since  1.0.0
-	 * @access public
-	 * @return void
 	 */
 	public static function activate() {
 

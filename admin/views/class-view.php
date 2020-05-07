@@ -18,7 +18,6 @@ abstract class View {
 
 	public $capability = 'manage_options';
 
-	 */
 	public function __toString() {
 		return $this->name;
 	}

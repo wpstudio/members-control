@@ -1,13 +1,6 @@
 /**
  * Block edit filter.
- *
- * @package   MembersBlockPermissions
- * @author    Justin Tadlock <justintadlock@gmail.com>
- * @copyright 2019 Justin Tadlock
- * @license   https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
- * @link      https://themehybrid.com/plugins/members-block-permissions
- */
-
+*/
 // Import plugin control components.
 import RoleCheckList    from './controls/role-checklist';
 import ConditionSelect  from './controls/condition-select';
@@ -26,7 +19,7 @@ const { Fragment }                   = wp.element;
 const { InspectorControls }          = wp.blockEditor;
 const { addFilter }                  = wp.hooks;
 const { PanelBody, Icon }            = wp.components;
-const { labels }                     = membersBlockPermissions;
+const { labels }                     = memberscontrolBlockPermissions;
 
 const PermissionsIconTitle = ( props ) => (
     <Fragment>
@@ -41,7 +34,7 @@ const PermissionsIconTitle = ( props ) => (
     </Fragment>
 );
 
-const MembersBlockPermissionsBlockEdit = createHigherOrderComponent( ( BlockEdit ) => {
+const MembersControlBlockPermissionsBlockEdit = createHigherOrderComponent( ( BlockEdit ) => {
 
 	return ( props ) => {
 
@@ -54,7 +47,7 @@ const MembersBlockPermissionsBlockEdit = createHigherOrderComponent( ( BlockEdit
 		// If there are permissions, we'll output a notice and disable
 		// each of the fields individually.
 
-		if ( ! membersBlockPermissions.userCanAssignPermissions && ! blockPermissionsCondition ) {
+		if ( ! memberscontrolBlockPermissions.userCanAssignPermissions && ! blockPermissionsCondition ) {
 			return (
 				<BlockEdit { ...props } />
 			);
@@ -67,11 +60,11 @@ const MembersBlockPermissionsBlockEdit = createHigherOrderComponent( ( BlockEdit
 					<PanelBody
 						title={ <PermissionsIconTitle title={labels.panel} /> }
 						initialOpen={ false }
-						className="members-bp-controls"
+						className="memberscontrol-bp-controls"
 					>
 
 					{
-						! membersBlockPermissions.userCanAssignPermissions
+						! memberscontrolBlockPermissions.userCanAssignPermissions
 						? <NotAllowedNotice />
 						: null
 					}
@@ -102,30 +95,12 @@ const MembersBlockPermissionsBlockEdit = createHigherOrderComponent( ( BlockEdit
 						: null
 					}
 
-					{
-						blockPermissionsCondition && 'paidMembership' === blockPermissionsType
-						? <UpgradePrompt message={ labels.paidMembership } />
-						: null
-					}
-
-					{
-						blockPermissionsCondition && 'contentRule' === blockPermissionsType
-						? <UpgradePrompt message={ labels.contentRule } />
-						: null
-					}
-
-					{
-						blockPermissionsCondition && 'contentRule' !== blockPermissionsType && 'paidMembership' !== blockPermissionsType
-						? <MessageTextarea { ...props } />
-						: null
-					}
-
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
 		);
 	};
 
-}, 'MembersBlockPermissionsBlockEdit' );
+}, 'MembersControlBlockPermissionsBlockEdit' );
 
-addFilter( 'editor.BlockEdit', 'members/block/permissions/edit', MembersBlockPermissionsBlockEdit );
+addFilter( 'editor.BlockEdit', 'memberscontrol/block/permissions/edit', MembersControlBlockPermissionsBlockEdit );

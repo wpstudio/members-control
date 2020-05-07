@@ -21,7 +21,6 @@ final class Cap_Group {
 
 	public $diff_added = false;
 
-	 */
 	public function __toString() {
 		return $this->name;
 	}

@@ -1,18 +1,14 @@
 <?php
 
-namespace Members\CategoryAndTagCaps;
+namespace MembersControl\CategoryAndTagCaps;
 
-use Members\CategoryAndTagCaps\Activator;
+use MembersControl\CategoryAndTagCaps\Activator;
 
 // Don't execute code if file is accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Registers the plugin activation callback.
- *
- * @since  1.0.0
- * @access public
- * @return void
  */
 register_activation_hook( __FILE__, function() {
 	require_once 'src/Activator.php';

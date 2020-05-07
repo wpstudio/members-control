@@ -33,7 +33,7 @@ final class Role_Edit {
 			wp_die( esc_html__( 'Whoah, partner!', 'memberscontrol' ) );
 
 		// Get the current role object to edit.
-		$this->role = get_role( members_sanitize_role( $_GET['role'] ) );
+		$this->role = get_role( memberscontrol_sanitize_role( $_GET['role'] ) );
 
 		// If we don't have a real role, die.
 		if ( is_null( $this->role ) )

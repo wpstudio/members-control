@@ -1,49 +1,21 @@
 <?php
 /**
  * Block Class.
- *
- * Handles front-end output of blocks.
- *
- * @package   MembersBlockPermissions
- * @author    Justin Tadlock <justintadlock@gmail.com>
- * @copyright 2019, Justin Tadlock
- * @link      https://themehybrid.com/plugins/members-block-permissions
- * @license   https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
  */
 
-namespace Members\BlockPermissions;
+namespace MembersControl\BlockPermissions;
 
 use WP_User;
 
 /**
  * Block component class.
- *
- * @since  1.0.0
- * @access public
  */
 class Block {
 
-	/**
-	 * Bootstraps the component.
-	 *
-	 * @since  1.0.0
-	 * @access public
-	 * @return void
-	 */
 	public function boot() {
 		add_filter( 'pre_render_block', [ $this, 'preRenderBlock' ], PHP_INT_MAX, 2 );
 	}
 
-	/**
-	 * Short-circuits block rendering on the front end if the user doesn't
-	 * have permission view the block.
-	 *
-	 * @since  1.0.0
-	 * @access public
-	 * @param  string|null  $pre_render  Returning anything other than null will short-circuit the block.
-	 * @param  array        $block       The block data.
-	 * @return mixed
-	 */
 	public function preRenderBlock( $pre_render, $block ) {
 
 		// Bail if we're in the admin or there are no block attributes.
@@ -91,7 +63,7 @@ class Block {
 
 			// Allow devs to overwrite the message.
 	   		$message = apply_filters(
-	   			'members/block/permissions/error/message',
+	   			'memberscontrol/block/permissions/error/message',
 				$message,
 				$block
 			);
@@ -100,7 +72,7 @@ class Block {
 			if ( $message ) {
 
 				$class = apply_filters(
-					'members/block/permissions/error/class',
+					'memberscontrol/block/permissions/error/class',
 					[ 'block-permissions-error' ],
 					$block
 				);
@@ -112,7 +84,7 @@ class Block {
 				);
 
 				$pre_render = apply_filters(
-					'members/block/permissions/error',
+					'memberscontrol/block/permissions/error',
 					$pre_render,
 					$block
 				);
@@ -122,14 +94,6 @@ class Block {
 		return $pre_render;
 	}
 
-	/**
-	 * Determines whether to render the block based on user status.
-	 *
-	 * @since  1.0.0
-	 * @access protected
-	 * @param  array   $block  The block data.
-	 * @return bool
-	 */
 	protected function checkUserStatus( $block ) {
 
 		$maybe_render = true;
@@ -170,14 +134,6 @@ class Block {
 		return $maybe_render;
 	}
 
-	/**
-	 * Determines whether to render the block based on user role.
-	 *
-	 * @since  1.0.0
-	 * @access protected
-	 * @param  array   $block  The block data.
-	 * @return bool
-	 */
 	protected function checkRole( $block ) {
 
 		$maybe_render = true;
@@ -230,14 +186,6 @@ class Block {
 		return $maybe_render;
 	}
 
-	/**
-	 * Determines whether to render the block based on capability.
-	 *
-	 * @since  1.0.0
-	 * @access protected
-	 * @param  array   $block  The block data.
-	 * @return bool
-	 */
 	protected function checkCap( $block ) {
 
 		$maybe_render = true;

@@ -26,7 +26,7 @@
  * @param  int     $post_id
  * @return bool
  */
-function members_can_user_view_post( $user_id, $post_id = '' ) {
+function memberscontrol_can_user_view_post( $user_id, $post_id = '' ) {
 
 	// If no post ID is given, assume we're in The Loop and get the current post's ID.
 	if ( ! $post_id ) {
@@ -42,14 +42,14 @@ function members_can_user_view_post( $user_id, $post_id = '' ) {
 	// The plugin is only going to handle permissions if the 'content permissions' feature
 	// is active.  If not active, the user can always view the post.  However, developers
 	// can roll their own handling of this and filter `members_can_user_view_post`.
-	if ( $post instanceof \WP_Post && members_content_permissions_enabled() ) {
+	if ( $post instanceof \WP_Post && memberscontrol_content_permissions_enabled() ) {
 
 		// Get the roles selected by the user.
-		$roles = members_get_post_roles( $post_id );
+		$roles = memberscontrol_get_post_roles( $post_id );
 
 		// Check if there are any old roles with the '_role' meta key.
 		if ( empty( $roles ) )
-			$roles = members_convert_old_post_meta( $post_id );
+			$roles = memberscontrol_convert_old_post_meta( $post_id );
 
 		// If we have an array of roles, let's get to work.
 		if ( ! empty( $roles ) && is_array( $roles ) ) {
@@ -78,7 +78,7 @@ function members_can_user_view_post( $user_id, $post_id = '' ) {
 				// Loop through each role and set $can_view to true if the user has one of the roles.
 				foreach ( $roles as $role ) {
 
-					if ( members_user_has_role( $user_id, $role ) ) {
+					if ( memberscontrol_user_has_role( $user_id, $role ) ) {
 						$can_view = true;
 						break;
 					}
@@ -91,7 +91,7 @@ function members_can_user_view_post( $user_id, $post_id = '' ) {
 	$check_parent = empty( $roles ) && $can_view;
 
 	// Set to `FALSE` to avoid hierarchical checking.
-	if ( apply_filters( 'members_check_parent_post_permission', $check_parent, $post_id, $user_id ) ) {
+	if ( apply_filters( 'memberscontrol_check_parent_post_permission', $check_parent, $post_id, $user_id ) ) {
 
 		if ( $post instanceof \WP_Post ) {
 
@@ -99,13 +99,13 @@ function members_can_user_view_post( $user_id, $post_id = '' ) {
 
 			// If the post has a parent, check if the user has permission to view it.
 			if ( 0 < $parent_id ) {
-				$can_view = members_can_user_view_post( $user_id, $parent_id );
+				$can_view = memberscontrol_can_user_view_post( $user_id, $parent_id );
 			}
 		}
 	}
 
 	// Allow developers to overwrite the final return value.
-	return apply_filters( 'members_can_user_view_post', $can_view, $user_id, $post_id );
+	return apply_filters( 'memberscontrol_can_user_view_post', $can_view, $user_id, $post_id );
 }
 
 /**
@@ -117,9 +117,9 @@ function members_can_user_view_post( $user_id, $post_id = '' ) {
  * @param  int    $post_id
  * @return bool
  */
-function members_can_current_user_view_post( $post_id = '' ) {
+function memberscontrol_can_current_user_view_post( $post_id = '' ) {
 
-	return members_can_user_view_post( get_current_user_id(), $post_id );
+	return memberscontrol_can_user_view_post( get_current_user_id(), $post_id );
 }
 
 /**
@@ -131,7 +131,7 @@ function members_can_current_user_view_post( $post_id = '' ) {
  * @param  array  $args
  * @return string
  */
-function members_list_users( $args = array() ) {
+function memberscontrol_list_users( $args = array() ) {
 
 	$output = '';
 	$users  = get_users( $args );
@@ -153,7 +153,7 @@ function members_list_users( $args = array() ) {
 		$output = sprintf( '<ul class="xoxo members-list-users">%s</ul>', $output );
 	}
 
-	$output = apply_filters( 'members_list_users', $output );
+	$output = apply_filters( 'memberscontrol_list_users', $output );
 
 	if ( empty( $args['echo'] ) )
 		return $output;

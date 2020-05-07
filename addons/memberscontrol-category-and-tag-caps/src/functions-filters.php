@@ -1,15 +1,8 @@
 <?php
 /**
  * Plugin filters.
- *
- * @package   MembersCategoryAndTagCaps
- * @author    Justin Tadlock <justintadlock@gmail.com>
- * @copyright 2019, Justin Tadlock
- * @link      https://themehybrid.com/plugins/members-category-and-tag-caps
- * @license   https://www.gnu.org/licenses/gpl-2.0.html GPL-2.0-or-later
  */
-
-namespace Members\CategoryAndTagCaps;
+namespace MembersControl\CategoryAndTagCaps;
 
 // Don't execute code if file is accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -17,12 +10,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Filters the category and tag registration arguments and overwrites their
  * capabilities with custom ones.
- *
- * @since  1.0.0
- * @access public
- * @param  array  $args      Array of taxonomy options.
- * @param  string $taxonomy  Name/Slug of the taxonomy.
- * @return array
  */
 add_filter( 'register_taxonomy_args', function( $args, $taxonomy ) {
 
@@ -52,12 +39,6 @@ add_filter( 'register_taxonomy_args', function( $args, $taxonomy ) {
 /**
  * Filters `map_meta_cap` to make sure core recognizes the appropriate capabilities
  * when looking for category and tag permission.
- *
- * @since  1.0.0
- * @access public
- * @param  array   $caps  Array of capabilities the user must have.
- * @param  string  $cap   The current capability being checked.
- * @return array
  */
 add_filter( 'map_meta_cap', function( $caps, $cap ) {
 

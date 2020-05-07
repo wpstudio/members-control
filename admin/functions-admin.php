@@ -21,9 +21,9 @@ function memberscontrol_admin_register_scripts() {
 
 	$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-	wp_register_script( 'memberscontrol-settings',  members_plugin()->uri . "js/settings{$min}.js",  array( 'jquery'  ), '', true );
-	wp_register_script( 'memberscontrol-edit-post', members_plugin()->uri . "js/edit-post{$min}.js", array( 'jquery'  ), '', true );
-	wp_register_script( 'memberscontrol-edit-role', members_plugin()->uri . "js/edit-role{$min}.js", array( 'postbox', 'wp-util' ), '', true );
+	wp_register_script( 'memberscontrol-settings',  memberscontrol_plugin()->uri . "js/settings{$min}.js",  array( 'jquery'  ), '', true );
+	wp_register_script( 'memberscontrol-edit-post', memberscontrol_plugin()->uri . "js/edit-post{$min}.js", array( 'jquery'  ), '', true );
+	wp_register_script( 'memberscontrol-edit-role', memberscontrol_plugin()->uri . "js/edit-role{$min}.js", array( 'postbox', 'wp-util' ), '', true );
 
 	// Localize our script with some text we want to pass in.
 	$i18n = array(
@@ -45,7 +45,7 @@ function memberscontrol_admin_register_styles() {
 
 	$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-	wp_register_style( 'memberscontrol-admin', members_plugin()->uri . "css/admin{$min}.css" );
+	wp_register_style( 'memberscontrol-admin', memberscontrol_plugin()->uri . "css/admin{$min}.css" );
 }
 
 /**
